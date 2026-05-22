@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚽ TACTIX MANAGER</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#070b14;--bg2:#0d1525;--bg3:#111d35;--card:#0f1a2e;--card2:#152237;--border:#1e3a5f;--accent:#00d4ff;--accent2:#ff6b35;--accent3:#ffd700;--green:#00e676;--red:#ff1744;--purple:#b040fb;--text:#e8f4fd;--text2:#8ab4d4;--text3:#4a7a9b;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:\'Rajdhani\',sans-serif;font-size:15px;overflow-x:hidden;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+#splash{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+#splash h1{font-family:\'Orbitron\',sans-serif;font-size:4em;color:var(--accent);text-shadow:0 0 40px var(--accent);animation:pulse 2s infinite;}
+#splash .progress{width:380px;height:4px;background:var(--bg3);border-radius:2px;margin-top:30px;overflow:hidden;}
+#splash .progress-bar{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:width 0.15s;border-radius:2px;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+#app{display:none;min-height:100vh;}
+#topbar{background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 20px;height:56px;position:sticky;top:0;z-index:100;}
+#topbar .logo{font-family:\'Orbitron\',sans-serif;color:var(--accent);font-size:1.2em;font-weight:700;}
+#topbar .manager-info{display:flex;align-items:center;gap:16px;}
+#topbar .mgr-stat .val{font-family:\'Orbitron\',sans-serif;font-size:1em;color:var(--accent3);}
+#topbar .mgr-stat .lbl{font-size:.7em;color:var(--text3);}
+#topbar .date-badge{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-family:\'Orbitron\',sans-serif;font-size:.8em;color:var(--accent);}
+#sidebar{width:220px;background:var(--bg2);border-right:1px solid var(--border);position:fixed;top:56px;left:0;bottom:0;overflow-y:auto;z-index:50;}
+#sidebar .nav-item{display:flex;align-items:center;gap:10px;padding:12px 20px;cursor:pointer;border-left:3px solid transparent;transition:all .2s;color:var(--text2);font-size:1em;font-weight:600;}
+#sidebar .nav-item:hover{background:var(--card);color:var(--text);border-left-color:var(--accent);}
+#sidebar .nav-item.active{background:var(--card);color:var(--accent);border-left-color:var(--accent);}
+#sidebar .nav-section{padding:16px 20px 6px;font-size:.72em;color:var(--text3);text-transform:uppercase;letter-spacing:2px;}
+#sidebar .nav-item .icon{font-size:1.2em;width:22px;}
+#main{margin-left:220px;margin-top:56px;padding:24px;min-height:calc(100vh - 56px);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.card-title{font-family:\'Bebas Neue\',sans-serif;font-size:1.4em;letter-spacing:1px;color:var(--accent);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-family:\'Rajdhani\',sans-serif;font-weight:700;font-size:.95em;transition:all .2s;}
+.btn-primary{background:var(--accent);color:#000;}.btn-primary:hover{background:#00b8d9;transform:translateY(-1px);}
+.btn-success{background:var(--green);color:#000;}.btn-success:hover{background:#00c853;}
+.btn-danger{background:var(--red);color:#fff;}.btn-warning{background:var(--accent3);color:#000;}
+.btn-secondary{background:var(--bg3);color:var(--text);border:1px solid var(--border);}.btn-secondary:hover{background:var(--card2);}
+.btn-sm{padding:5px 12px;font-size:.82em;}.btn:disabled{opacity:.5;cursor:not-allowed;}
+.table{width:100%;border-collapse:collapse;}
+.table th{background:var(--bg3);color:var(--text2);font-size:.78em;text-transform:uppercase;letter-spacing:1px;padding:10px 12px;text-align:left;}
+.table td{padding:10px 12px;border-bottom:1px solid var(--border);}
+.table tr:hover td{background:var(--card2);}
+.stat-bar{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;}
+.stat-bar-fill{height:100%;border-radius:4px;transition:width .5s;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:28px;max-width:680px;width:92%;max-height:88vh;overflow-y:auto;position:relative;}
+.modal h2{font-family:\'Bebas Neue\',sans-serif;font-size:1.9em;color:var(--accent);margin-bottom:18px;}
+.modal-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text2);font-size:1.4em;cursor:pointer;}
+.form-group{margin-bottom:14px;}
+.form-group label{display:block;font-size:.82em;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:\'Rajdhani\',sans-serif;font-size:1em;}
+.form-group input:focus,.form-group select:focus{outline:none;border-color:var(--accent);}
+.form-group select option{background:var(--bg2);}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.78em;font-weight:700;}
+.badge-gold{background:rgba(255,215,0,.15);color:var(--accent3);border:1px solid rgba(255,215,0,.3);}
+.badge-blue{background:rgba(0,212,255,.1);color:var(--accent);border:1px solid rgba(0,212,255,.2);}
+.badge-green{background:rgba(0,230,118,.1);color:var(--green);border:1px solid rgba(0,230,118,.2);}
+.badge-red{background:rgba(255,23,68,.1);color:var(--red);border:1px solid rgba(255,23,68,.2);}
+.rating-circle{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:\'Orbitron\',sans-serif;font-weight:700;font-size:.85em;border:2px solid;}
+.rating-elite{border-color:var(--accent3);color:var(--accent3);background:rgba(255,215,0,.1);}
+.rating-high{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.1);}
+.rating-mid{border-color:var(--green);color:var(--green);background:rgba(0,230,118,.1);}
+.rating-low{border-color:var(--text3);color:var(--text3);background:rgba(74,122,155,.1);}
+#notif{position:fixed;bottom:24px;right:24px;z-index:9000;display:flex;flex-direction:column;gap:8px;}
+.notif-item{background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:12px 18px;min-width:260px;max-width:340px;animation:slideIn .3s ease;font-size:.92em;}
+.notif-item.success{border-left:3px solid var(--green);}.notif-item.error{border-left:3px solid var(--red);}
+.notif-item.info{border-left:3px solid var(--accent);}.notif-item.warning{border-left:3px solid var(--accent3);}
+@keyframes slideIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+.pitch{background:linear-gradient(180deg,#1a5c1a 0%,#1e6b1e 50%,#1a5c1a 100%);border-radius:12px;padding:20px;border:2px solid #2d8a2d;}
+.pitch-line{border:2px solid rgba(255,255,255,.25);border-radius:6px;padding:10px;min-height:340px;}
+.pitch-row{display:flex;justify-content:space-evenly;padding:6px 0;}
+.player-token{background:var(--card);border:2px solid var(--accent);border-radius:8px;padding:5px 8px;text-align:center;cursor:pointer;transition:all .2s;min-width:74px;}
+.player-token:hover{border-color:var(--accent3);transform:scale(1.05);}
+.player-token .pname{font-size:.75em;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:74px;}
+.player-token .prating{font-family:\'Orbitron\',sans-serif;font-size:.7em;color:var(--accent3);}
+.match-score{font-family:\'Orbitron\',sans-serif;font-size:2.8em;color:var(--accent3);text-align:center;}
+.match-event{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid var(--border);font-size:.88em;}
+.page{display:none;}.page.active{display:block;}
+.club-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;}
+.club-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.league-table tr.my-club td{background:rgba(0,212,255,.07);font-weight:700;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn .3s ease;}
+.tabs{display:flex;gap:4px;margin-bottom:18px;background:var(--bg3);border-radius:10px;padding:4px;}
+.tab{flex:1;padding:8px;text-align:center;border-radius:8px;cursor:pointer;font-weight:700;color:var(--text2);transition:all .2s;font-size:.9em;}
+.tab.active{background:var(--card2);color:var(--accent);}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);}
+.player-list-item{display:flex;align-items:center;gap:12px;padding:10px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.player-list-item:hover{background:var(--card2);}
+.offer-card{background:var(--bg3);border:1px solid var(--accent3);border-radius:10px;padding:14px;margin-bottom:12px;position:relative;}
+.offer-card::before{content:\'\';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--accent3);border-radius:10px 0 0 10px;}
+.formation-btn{padding:7px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg3);color:var(--text2);cursor:pointer;transition:all .2s;font-family:\'Rajdhani\',sans-serif;font-weight:600;font-size:.88em;}
+.formation-btn.active{background:var(--accent);color:#000;border-color:var(--accent);}
+.search-input{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:\'Rajdhani\',sans-serif;font-size:1em;}
+.search-input:focus{outline:none;border-color:var(--accent);}
+.trophy-card{background:var(--card);border:1px solid var(--accent3);border-radius:12px;padding:14px;text-align:center;min-width:110px;}
+.news-item{padding:10px;border-bottom:1px solid var(--border);}
+.news-date{font-size:.76em;color:var(--text3);}
+.finance-positive{color:var(--green);font-weight:700;}.finance-negative{color:var(--red);font-weight:700;}
+.welcome-option{background:var(--card);border:2px solid var(--border);border-radius:16px;padding:24px;cursor:pointer;transition:all .3s;text-align:center;}
+.welcome-option:hover{border-color:var(--accent);transform:translateY(-4px);box-shadow:0 8px 30px rgba(0,212,255,.15);}
+.difficulty-card{background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s;text-align:center;}
+.difficulty-card.selected{border-color:var(--accent);background:rgba(0,212,255,.07);}
+#auth-screen{position:fixed;inset:0;background:var(--bg);z-index:8000;display:flex;align-items:center;justify-content:center;}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:38px;width:400px;text-align:center;}
+.auth-box h2{font-family:\'Orbitron\',sans-serif;color:var(--accent);font-size:1.8em;margin-bottom:6px;}
+.auth-tabs{display:flex;gap:4px;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:22px;}
+.auth-tab{flex:1;padding:8px;border-radius:8px;cursor:pointer;font-weight:700;color:var(--text2);border:none;background:none;font-family:\'Rajdhani\',sans-serif;font-size:.95em;transition:all .2s;}
+.auth-tab.active{background:var(--card2);color:var(--accent);}
+.league-code-box{font-family:\'Orbitron\',sans-serif;font-size:1.8em;color:var(--accent3);letter-spacing:6px;text-align:center;padding:14px;background:var(--bg);border-radius:10px;border:2px solid var(--accent3);margin:10px 0;}
+.league-card{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:10px;transition:all .2s;cursor:pointer;}
+.league-card:hover{border-color:var(--accent);}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.mp-status{background:var(--bg3);border-radius:8px;padding:10px 14px;margin-bottom:14px;font-size:.82em;display:flex;align-items:center;gap:8px;}
+</style>
+</head>
+<body>
+<div id="splash">
+  <h1>⚽ TACTIX</h1>
+  <p style="font-family:\'Orbitron\',sans-serif;letter-spacing:3px;color:var(--accent2);margin-top:6px">FOOTBALL MANAGER</p>
+  <div class="progress"><div class="progress-bar" id="prog"></div></div>
+  <p id="load-text" style="margin-top:10px;color:var(--text3);font-size:.88em">Initializing...</p>
+</div>
+
+<div id="auth-screen" style="display:none">
+  <div class="auth-box fade-in">
+    <div style="font-size:2.5em;margin-bottom:6px">⚽</div>
+    <h2>TACTIX MANAGER</h2>
+    <p style="color:var(--text2);margin-bottom:20px;font-size:.9em">Sign in untuk menyimpan progress</p>
+    <div class="auth-tabs">
+      <button class="auth-tab active" onclick="switchAuthTab(\'login\')">Login</button>
+      <button class="auth-tab" onclick="switchAuthTab(\'register\')">Register</button>
+    </div>
+    <div id="auth-login">
+      <div class="form-group"><label>Username</label><input id="login-user" placeholder="Username kamu" onkeydown="if(event.key===\'Enter\')doLogin()"></div>
+      <div class="form-group"><label>Password</label><input id="login-pass" type="password" placeholder="Password" onkeydown="if(event.key===\'Enter\')doLogin()"></div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;margin-top:6px" onclick="doLogin()">🚀 Login</button>
+      <button class="btn btn-secondary" style="width:100%;justify-content:center;margin-top:8px" onclick="continueAsGuest()">👤 Main Sebagai Tamu</button>
+    </div>
+    <div id="auth-register" style="display:none">
+      <div class="form-group"><label>Username</label><input id="reg-user" placeholder="Pilih username (min 3 karakter)"></div>
+      <div class="form-group"><label>Password</label><input id="reg-pass" type="password" placeholder="Pilih password (min 4 karakter)"></div>
+      <button class="btn btn-success" style="width:100%;justify-content:center;margin-top:6px" onclick="doRegister()">✅ Buat Akun</button>
+    </div>
+    <div id="auth-error" style="color:var(--red);margin-top:10px;font-size:.88em;display:none"></div>
+  </div>
+</div>
+
+<div id="app">
+<div id="topbar">
+  <div class="logo">⚽ TACTIX</div>
+  <div class="manager-info" id="topbar-info"></div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <div class="date-badge" id="game-date">Season 2024/25 · W1</div>
+    <div id="user-badge" style="background:var(--card);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:.82em;color:var(--accent2)"></div>
+  </div>
+</div>
+<div id="sidebar">
+  <div class="nav-section">Club</div>
+  <div class="nav-item active" onclick="showPage(\'dashboard\')" id="nav-dashboard"><span class="icon">🏠</span>Dashboard</div>
+  <div class="nav-item" onclick="showPage(\'squad\')" id="nav-squad"><span class="icon">👥</span>Squad</div>
+  <div class="nav-item" onclick="showPage(\'tactics\')" id="nav-tactics"><span class="icon">♟️</span>Tactics</div>
+  <div class="nav-item" onclick="showPage(\'finances\')" id="nav-finances"><span class="icon">💰</span>Finances</div>
+  <div class="nav-section">Competition</div>
+  <div class="nav-item" onclick="showPage(\'fixtures\')" id="nav-fixtures"><span class="icon">📅</span>Fixtures</div>
+  <div class="nav-item" onclick="showPage(\'league\')" id="nav-league"><span class="icon">🏆</span>League Table</div>
+  <div class="nav-item" onclick="showPage(\'tournaments\')" id="nav-tournaments"><span class="icon">🥇</span>Tournaments</div>
+  <div class="nav-section">Market</div>
+  <div class="nav-item" onclick="showPage(\'transfer\')" id="nav-transfer"><span class="icon">🔄</span>Transfer Market</div>
+  <div class="nav-item" onclick="showPage(\'scout\')" id="nav-scout"><span class="icon">🔍</span>Scout</div>
+  <div class="nav-section">Multiplayer</div>
+  <div class="nav-item" onclick="showPage(\'multiplayer\')" id="nav-multiplayer"><span class="icon">🌐</span>Liga Online</div>
+  <div class="nav-section">Manager</div>
+  <div class="nav-item" onclick="showPage(\'manager\')" id="nav-manager"><span class="icon">🎖️</span>My Profile</div>
+  <div class="nav-item" onclick="showPage(\'offers\')" id="nav-offers"><span class="icon">📩</span>Job Offers <span id="offer-badge" style="display:none;background:var(--red);border-radius:10px;padding:1px 7px;font-size:.72em;color:#fff;margin-left:auto"></span></div>
+  <div class="nav-item" onclick="showPage(\'clubs\')" id="nav-clubs"><span class="icon">🌍</span>All Clubs</div>
+  <div class="nav-item" onclick="showPage(\'news\')" id="nav-news"><span class="icon">📰</span>News</div>
+  <div class="nav-item" onclick="showPage(\'help\')" id="nav-help"><span class="icon">❓</span>Help</div>
+  <div class="nav-item" onclick="logoutUser()"><span class="icon">🚪</span>Logout</div>
+</div>
+<div id="main">
+
+<div id="welcome-screen" style="display:none">
+  <div style="max-width:860px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:36px">
+      <h1 style="font-family:\'Orbitron\',sans-serif;font-size:2.6em;color:var(--accent)">⚽ TACTIX MANAGER</h1>
+      <p style="color:var(--text2);font-size:1.1em;margin-top:8px">Karir manajer sepak bola dimulai dari sini</p>
+    </div>
+    <div class="grid-2" style="gap:20px;max-width:560px;margin:0 auto">
+      <div class="welcome-option" onclick="showSetup(\'existing\')"><div style="font-size:3.5em;margin-bottom:12px">🏟️</div><h3 style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6em;color:var(--accent)">Ambil Alih Klub</h3><p style="color:var(--text2);font-size:.88em;margin-top:6px">Pilih dari 50+ klub nyata</p></div>
+      <div class="welcome-option" onclick="showSetup(\'create\')"><div style="font-size:3.5em;margin-bottom:12px">✨</div><h3 style="font-family:\'Bebas Neue\',sans-serif;font-size:1.6em;color:var(--accent)">Buat Klub Baru</h3><p style="color:var(--text2);font-size:.88em;margin-top:6px">Bangun dari nol</p></div>
+    </div>
+    <div style="text-align:center;margin-top:18px">
+      <button class="btn btn-secondary" onclick="loadSaveGame()">📂 Lanjutkan Save</button>
+    </div>
+  </div>
+</div>
+
+<div id="setup-existing" style="display:none" class="fade-in">
+  <h2 style="font-family:\'Bebas Neue\',sans-serif;font-size:2.2em;color:var(--accent);margin-bottom:18px">Pilih Klub Kamu</h2>
+  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+    <input class="search-input" id="club-search" placeholder="🔍 Cari klub..." oninput="filterClubs()" style="width:230px">
+    <select id="club-league-filter" onchange="filterClubs()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:\'Rajdhani\',sans-serif"><option value="">Semua Liga</option></select>
+    <select id="club-country-filter" onchange="filterClubs()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 12px;color:var(--text);font-family:\'Rajdhani\',sans-serif"><option value="">Semua Negara</option></select>
+  </div>
+  <div id="club-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:10px;max-height:58vh;overflow-y:auto"></div>
+  <div style="margin-top:18px"><button class="btn btn-secondary" onclick="backToWelcome()">← Back</button></div>
+</div>
+
+<div id="setup-create" style="display:none" class="fade-in">
+  <h2 style="font-family:\'Bebas Neue\',sans-serif;font-size:2.2em;color:var(--accent);margin-bottom:18px">Buat Klub Baru</h2>
+  <div class="grid-2" style="gap:18px">
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Identitas Klub</div>
+      <div class="form-group"><label>Nama Klub</label><input id="cc-name" placeholder="e.g. FC Nusantara" oninput="document.getElementById(\'cc-preview-name\').textContent=this.value||\'Your Club\'"></div>
+      <div class="form-group"><label>Logo (Emoji)</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px">
+          <span onclick="selectEmoji(\'⚽\')" style="cursor:pointer;font-size:1.5em">⚽</span><span onclick="selectEmoji(\'🦁\')" style="cursor:pointer;font-size:1.5em">🦁</span><span onclick="selectEmoji(\'🦅\')" style="cursor:pointer;font-size:1.5em">🦅</span><span onclick="selectEmoji(\'🐉\')" style="cursor:pointer;font-size:1.5em">🐉</span><span onclick="selectEmoji(\'⭐\')" style="cursor:pointer;font-size:1.5em">⭐</span><span onclick="selectEmoji(\'🔥\')" style="cursor:pointer;font-size:1.5em">🔥</span><span onclick="selectEmoji(\'⚡\')" style="cursor:pointer;font-size:1.5em">⚡</span><span onclick="selectEmoji(\'🌙\')" style="cursor:pointer;font-size:1.5em">🌙</span><span onclick="selectEmoji(\'🦊\')" style="cursor:pointer;font-size:1.5em">🦊</span><span onclick="selectEmoji(\'🐺\')" style="cursor:pointer;font-size:1.5em">🐺</span>
+        </div>
+        <input id="cc-logo" placeholder="atau ketik emoji sendiri" maxlength="4" oninput="document.getElementById(\'cc-preview-logo\').textContent=this.value||\'⚽\'">
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:14px">Stadion & Liga</div>
+      <div class="form-group"><label>Nama Stadion</label><input id="cc-stadium" placeholder="e.g. Gelora Nusantara"></div>
+      <div class="form-group"><label>Kapasitas</label><input id="cc-capacity" type="number" value="30000" min="5000" max="120000"></div>
+      <div class="form-group"><label>Negara</label><select id="cc-country"></select></div>
+      <div class="form-group"><label>Liga</label><select id="cc-league"></select></div>
+      <div class="form-group"><label>Starting Budget</label>
+        <select id="cc-budget"><option value="5000000">€5M - Klub Kecil</option><option value="20000000" selected>€20M - Menengah</option><option value="50000000">€50M - Besar</option><option value="100000000">€100M - Tajir</option></select>
+      </div>
+      <div style="background:var(--bg3);border-radius:8px;padding:10px;text-align:center">
+        <div style="font-size:2.5em" id="cc-preview-logo">⚽</div>
+        <div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.3em" id="cc-preview-name">Your Club</div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:14px">
+    <div class="card-title" style="margin-bottom:14px">Profil Manajer</div>
+    <div class="grid-3" style="gap:14px">
+      <div class="form-group"><label>Nama Kamu</label><input id="mgr-name" placeholder="Nama Manajer"></div>
+      <div class="form-group"><label>Kebangsaan</label><select id="mgr-nation"></select></div>
+      <div class="form-group"><label>Kesulitan</label>
+        <div style="display:flex;gap:6px">
+          <div class="difficulty-card selected" onclick="selectDiff(this,\'easy\')" style="flex:1"><div>😊</div><div style="font-size:.78em">Easy</div></div>
+          <div class="difficulty-card" onclick="selectDiff(this,\'normal\')" style="flex:1"><div>😐</div><div style="font-size:.78em">Normal</div></div>
+          <div class="difficulty-card" onclick="selectDiff(this,\'hard\')" style="flex:1"><div>😤</div><div style="font-size:.78em">Hard</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:18px;display:flex;gap:10px">
+    <button class="btn btn-secondary" onclick="backToWelcome()">← Back</button>
+    <button class="btn btn-primary" onclick="startNewGame(\'create\')" style="font-size:1.05em">🚀 Mulai Karir!</button>
+  </div>
+</div>
+
+<div id="page-dashboard" class="page active fade-in"><div id="dashboard-content"></div></div>
+<div id="page-squad" class="page fade-in">
+  <div class="card-header">
+    <div class="card-title">📋 Squad Saya</div>
+    <div style="display:flex;gap:8px">
+      <input class="search-input" id="squad-search" placeholder="🔍 Cari pemain..." oninput="filterSquad()" style="width:190px">
+      <select id="squad-pos-filter" onchange="filterSquad()" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--text);font-family:\'Rajdhani\',sans-serif">
+        <option value="">Semua Pos</option><option value="GK">GK</option><option value="DEF">DEF</option><option value="MID">MID</option><option value="ATT">ATT</option>
+      </select>
+    </div>
+  </div>
+  <div id="squad-content"></div>
+</div>
+<div id="page-tactics" class="page fade-in"><div id="tactics-content"></div></div>
+<div id="page-finances" class="page fade-in"><div id="finances-content"></div></div>
+<div id="page-fixtures" class="page fade-in"><div id="fixtures-content"></div></div>
+<div id="page-league" class="page fade-in"><div id="league-content"></div></div>
+<div id="page-tournaments" class="page fade-in"><div id="tournaments-content"></div></div>
+<div id="page-transfer" class="page fade-in"><div id="transfer-content"></div></div>
+<div id="page-scout" class="page fade-in"><div id="scout-content"></div></div>
+<div id="page-manager" class="page fade-in"><div id="manager-content"></div></div>
+<div id="page-offers" class="page fade-in"><div id="offers-content"></div></div>
+<div id="page-clubs" class="page fade-in"><div id="clubs-content"></div></div>
+<div id="page-news" class="page fade-in"><div id="news-content"></div></div>
+<div id="page-help" class="page fade-in"><div id="help-content"></div></div>
+<div id="page-multiplayer" class="page fade-in"><div id="multiplayer-content"></div></div>
+</div></div>
+<div id="modal-container"></div>
+<div id="notif"></div>
+<script>
+// ============================================================
+// CONFIG — JSONBin.io untuk multiplayer lintas perangkat
+// JSONBin gratis: https://jsonbin.io → daftar → API Keys → copy Master Key
+// ============================================================
+const JSONBIN_KEY = '$2a$10$placeholder_replace_this_key';
+// ↑↑↑ Ganti dengan Master Key dari jsonbin.io/app/apikeys
+// Cara: Buka jsonbin.io → Sign up gratis → API Keys → copy key yg ada $2a$10$...
+
+const JSONBIN_BASE = 'https://api.jsonbin.io/v3';
+
+// ============================================================
+// CLOUD MULTIPLAYER ENGINE (JSONBin.io)
+// - Buat liga = POST /bins → simpan bin ID sebagai "kode liga"  
+// - Join/update = PUT /bins/:id
+// - Read = GET /bins/:id/latest
+// - Kode liga = 6 char dari bin ID (unique)
+// ============================================================
+
+// Mapping kode pendek (6 char) → bin ID penuh
+function getCodeMap(){try{return JSON.parse(localStorage.getItem('tx_codemap')||'{}')}catch(e){return{}}}
+function saveCodeMap(m){localStorage.setItem('tx_codemap',JSON.stringify(m))}
+
+async function cloudCreate(data){
+  const r=await fetch(JSONBIN_BASE+'/bins',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY,'X-Bin-Name':'tactix_'+data.code,'X-Bin-Private':'false'},
+    body:JSON.stringify(data)
+  });
+  if(!r.ok) throw new Error('Gagal buat liga di cloud: '+r.status);
+  const j=await r.json();
+  return j.metadata.id; // bin ID penuh
+}
+
+async function cloudRead(binId){
+  const r=await fetch(JSONBIN_BASE+'/bins/'+binId+'/latest',{
+    headers:{'X-Master-Key':JSONBIN_KEY}
+  });
+  if(r.status===404) return null;
+  if(!r.ok) throw new Error('Gagal baca cloud: '+r.status);
+  const j=await r.json();
+  return j.record;
+}
+
+async function cloudUpdate(binId, data){
+  const r=await fetch(JSONBIN_BASE+'/bins/'+binId,{
+    method:'PUT',
+    headers:{'Content-Type':'application/json','X-Master-Key':JSONBIN_KEY},
+    body:JSON.stringify(data)
+  });
+  if(!r.ok) throw new Error('Gagal update cloud: '+r.status);
+}
+
+async function cloudSearch(code){
+  // Cari bin berdasarkan nama
+  const r=await fetch(JSONBIN_BASE+'/bins?q=tactix_'+code,{
+    headers:{'X-Master-Key':JSONBIN_KEY}
+  });
+  if(!r.ok) return null;
+  const j=await r.json();
+  if(!j.length) return null;
+  return j[0].id;
+}
+
+// Cek apakah cloud mode aktif (key sudah diisi)
+function isCloudReady(){
+  return JSONBIN_KEY && !JSONBIN_KEY.includes('placeholder');
+}
+
+// ============================================================
+// STORAGE LAYER — auto pilih cloud atau localStorage
+// ============================================================
+function getMLLocal(){try{return JSON.parse(localStorage.getItem('tx_ml')||'{}')}catch(e){return{}}}
+function saveMLLocal(d){localStorage.setItem('tx_ml',JSON.stringify(d))}
+
+async function mlGet(code){
+  // Coba cloud dulu jika aktif
+  if(isCloudReady()){
+    const cm=getCodeMap();
+    let binId=cm[code];
+    if(!binId){
+      // Cari di cloud
+      binId=await cloudSearch(code).catch(()=>null);
+      if(binId){cm[code]=binId;saveCodeMap(cm);}
+    }
+    if(binId){
+      const d=await cloudRead(binId).catch(()=>null);
+      if(d){
+        // Cache ke local
+        const ml=getMLLocal();ml[code]=d;saveMLLocal(ml);
+        return d;
+      }
+    }
+  }
+  // Fallback localStorage
+  const ml=getMLLocal();
+  return ml[code]||null;
+}
+
+async function mlSet(code, data){
+  if(isCloudReady()){
+    const cm=getCodeMap();
+    let binId=cm[code];
+    if(!binId){
+      binId=await cloudCreate(data).catch(e=>{
+        console.warn('Cloud create gagal, pakai local:',e);
+        return null;
+      });
+      if(binId){cm[code]=binId;saveCodeMap(cm);}
+    } else {
+      await cloudUpdate(binId,data).catch(e=>console.warn('Cloud update gagal:',e));
+    }
+  }
+  // Selalu simpan local sebagai cache/fallback
+  const ml=getMLLocal();ml[code]=data;saveMLLocal(ml);
+}
+
+async function mlGetAll(){
+  const ml=getMLLocal();
+  // Merge dengan cloud jika aktif
+  if(isCloudReady()){
+    const cm=getCodeMap();
+    const fetches=Object.entries(cm).map(async([code,binId])=>{
+      const d=await cloudRead(binId).catch(()=>null);
+      if(d){ml[code]=d;}
+    });
+    await Promise.allSettled(fetches);
+  }
+  return ml;
+}
+
+async function mlUpdatePlayer(code, username, playerData){
+  const league=await mlGet(code);
+  if(!league) return;
+  if(!league.players) league.players={};
+  league.players[username]=playerData;
+  await mlSet(code, league);
+}
+
+async function mlRemove(code){
+  const ml=getMLLocal();delete ml[code];saveMLLocal(ml);
+  // Note: JSONBin free tier tidak bisa delete bin via API, tapi data dihapus dari local
+  // Set status closed saja di cloud
+  if(isCloudReady()){
+    const cm=getCodeMap();
+    const binId=cm[code];
+    if(binId){
+      const d=await cloudRead(binId).catch(()=>null);
+      if(d){d.status='deleted';await cloudUpdate(binId,d).catch(()=>{});}
+      delete cm[code];saveCodeMap(cm);
+    }
+  }
+}
+
+async function mlRemovePlayer(code, username){
+  const league=await mlGet(code);
+  if(!league) return;
+  if(league.players) delete league.players[username];
+  await mlSet(code, league);
+}
+
+// ============================================================
+// AUTH (localStorage per-user)
+// ============================================================
+let currentUser = null;
+function getUsers(){try{return JSON.parse(localStorage.getItem('tx_users')||'{}')}catch(e){return{}}}
+function saveUsers(u){localStorage.setItem('tx_users',JSON.stringify(u))}
+function switchAuthTab(t){
+  document.getElementById('auth-login').style.display=t==='login'?'block':'none';
+  document.getElementById('auth-register').style.display=t==='register'?'block':'none';
+  document.querySelectorAll('.auth-tab').forEach((el,i)=>el.classList.toggle('active',(i===0&&t==='login')||(i===1&&t==='register')));
+  document.getElementById('auth-error').style.display='none';
+}
+function showAuthErr(m){const e=document.getElementById('auth-error');e.textContent=m;e.style.display='block';}
+function doLogin(){
+  const u=(document.getElementById('login-user').value||'').trim();
+  const p=document.getElementById('login-pass').value;
+  if(!u||!p){showAuthErr('Isi username dan password!');return;}
+  const users=getUsers();
+  if(!users[u]){showAuthErr('Username tidak ditemukan!');return;}
+  if(users[u].pw!==btoa(p)){showAuthErr('Password salah!');return;}
+  currentUser=u;localStorage.setItem('tx_cu',u);
+  hideAuth();showNotif('Selamat datang kembali, '+u+'! 👋','success');
+}
+function doRegister(){
+  const u=(document.getElementById('reg-user').value||'').trim();
+  const p=document.getElementById('reg-pass').value;
+  if(!u||!p){showAuthErr('Isi semua field!');return;}
+  if(u.length<3){showAuthErr('Username minimal 3 karakter!');return;}
+  if(p.length<4){showAuthErr('Password minimal 4 karakter!');return;}
+  const users=getUsers();
+  if(users[u]){showAuthErr('Username sudah dipakai!');return;}
+  users[u]={pw:btoa(p),created:Date.now()};saveUsers(users);
+  currentUser=u;localStorage.setItem('tx_cu',u);
+  hideAuth();showNotif('Akun dibuat! Selamat datang, '+u+'! 🎉','success');
+}
+function continueAsGuest(){
+  currentUser='tamu_'+Math.random().toString(36).slice(2,7);
+  localStorage.setItem('tx_cu',currentUser);
+  hideAuth();showNotif('Main sebagai tamu. Multiplayer terbatas.','warning');
+}
+function hideAuth(){
+  document.getElementById('auth-screen').style.display='none';
+  document.getElementById('app').style.display='block';
+  const b=document.getElementById('user-badge');
+  if(b) b.textContent=(currentUser.startsWith('tamu_')?'👤 Tamu':'👤 '+currentUser);
+}
+function logoutUser(){
+  if(G.initialized)saveGame();
+  currentUser=null;localStorage.removeItem('tx_cu');
+  G=defaultG();
+  document.getElementById('app').style.display='none';
+  document.getElementById('auth-screen').style.display='flex';
+}
+function getSaveKey(){return 'tx_save_'+currentUser;}
+
+// ============================================================
+// MULTIPLAYER LIGA
+// ============================================================
+function buildPlayerEntry(){
+  return{
+    username:currentUser,clubName:G.myClub?G.myClub.name:'Unknown',
+    clubLogo:G.myClub?G.myClub.logo:'⚽',clubRating:G.myClub?G.myClub.rating:60,
+    managerRating:Math.round(G.managerRating||50),
+    pts:(G.stats.wins||0)*3+(G.stats.draws||0),
+    w:G.stats.wins||0,d:G.stats.draws||0,l:G.stats.losses||0,
+    gf:G.stats.goalsFor||0,ga:G.stats.goalsAgainst||0,
+    gd:(G.stats.goalsFor||0)-(G.stats.goalsAgainst||0),
+    p:(G.stats.wins||0)+(G.stats.draws||0)+(G.stats.losses||0),
+    trophies:G.trophies?G.trophies.length:0,
+    season:G.season||1,week:G.week||1,updatedAt:Date.now()
+  };
+}
+
+async function createMultiLeague(){
+  const nameEl=document.getElementById('ml-name');
+  const maxEl=document.getElementById('ml-maxplayers');
+  if(!nameEl){showNotif('Form tidak ditemukan. Refresh halaman.','error');return;}
+  const leagueName=(nameEl.value||'').trim();
+  const maxPlayers=parseInt(maxEl?maxEl.value:'8')||8;
+  if(!leagueName){
+    showNotif('⚠️ Masukkan nama liga dulu!','error');
+    nameEl.focus();nameEl.style.borderColor='var(--red)';
+    setTimeout(()=>{nameEl.style.borderColor=''},2000);return;
+  }
+  if(!G.initialized){showNotif('⚠️ Mulai karir dulu!','error');return;}
+  if(currentUser.startsWith('tamu_')){showNotif('⚠️ Buat akun dulu untuk multiplayer!','warning');return;}
+  const code=Math.random().toString(36).slice(2,8).toUpperCase();
+  const leagueData={code,name:leagueName,creator:currentUser,maxPlayers,createdAt:Date.now(),status:'open',players:{}};
+  leagueData.players[currentUser]=buildPlayerEntry();
+  const btn=document.getElementById('btn-create-liga');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Creating...';}
+  try{
+    await mlSet(code,leagueData);
+    localStorage.setItem('tx_my_league_'+currentUser,code);
+    showNotif('🎉 Liga "'+leagueName+'" dibuat! Kode: '+code,'success');
+    renderPage('multiplayer');
+  }catch(err){
+    showNotif('Gagal: '+err.message,'error');
+    if(btn){btn.disabled=false;btn.textContent='🚀 Buat Liga Sekarang';}
+  }
+}
+
+async function joinMultiLeague(){
+  const codeEl=document.getElementById('ml-join-code');
+  if(!codeEl){showNotif('Form tidak ditemukan.','error');return;}
+  const code=(codeEl.value||'').trim().toUpperCase();
+  if(code.length<4){showNotif('⚠️ Masukkan kode liga (6 karakter)!','error');codeEl.focus();return;}
+  if(!G.initialized){showNotif('⚠️ Mulai karir dulu!','error');return;}
+  if(currentUser.startsWith('tamu_')){showNotif('⚠️ Buat akun dulu!','warning');return;}
+  const btn=document.getElementById('btn-join-liga');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Joining...';}
+  try{
+    const league=await mlGet(code);
+    if(!league){showNotif('❌ Liga tidak ditemukan! Cek kodenya.','error');if(btn){btn.disabled=false;btn.textContent='✅ Join Liga'}return;}
+    if(league.status!=='open'){showNotif('Liga sudah ditutup.','error');if(btn){btn.disabled=false;btn.textContent='✅ Join Liga'}return;}
+    if(Object.keys(league.players||{}).length>=league.maxPlayers){showNotif('Liga sudah penuh!','error');if(btn){btn.disabled=false;btn.textContent='✅ Join Liga'}return;}
+    if(league.players&&league.players[currentUser]){showNotif('Kamu sudah di liga ini!','warning');if(btn){btn.disabled=false;btn.textContent='✅ Join Liga'}return;}
+    await mlUpdatePlayer(code,currentUser,buildPlayerEntry());
+    localStorage.setItem('tx_my_league_'+currentUser,code);
+    showNotif('✅ Berhasil join liga "'+league.name+'"!','success');
+    renderPage('multiplayer');
+  }catch(err){
+    showNotif('Gagal join: '+err.message,'error');
+    if(btn){btn.disabled=false;btn.textContent='✅ Join Liga';}
+  }
+}
+
+async function submitWeeklyResult(code){
+  if(!G.initialized){showNotif('Mulai karir dulu!','error');return;}
+  const btn=document.getElementById('btn-update-stats');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Updating...';}
+  try{
+    await mlUpdatePlayer(code,currentUser,buildPlayerEntry());
+    showNotif('📊 Stats diperbarui!','success');
+  }catch(err){showNotif('Gagal: '+err.message,'error');}
+  if(btn){btn.disabled=false;btn.textContent='📤 Update Stats Saya';}
+  renderPage('multiplayer');
+}
+
+async function leaveLeague(code){
+  if(!confirm('Yakin mau keluar dari liga?'))return;
+  try{
+    const league=await mlGet(code);
+    if(league&&league.creator===currentUser){await mlRemove(code);showNotif('Liga dihapus.','info');}
+    else{await mlRemovePlayer(code,currentUser);showNotif('Kamu keluar dari liga.','info');}
+    localStorage.removeItem('tx_my_league_'+currentUser);
+    renderPage('multiplayer');
+  }catch(err){showNotif('Error: '+err.message,'error');}
+}
+
+async function renderMultiplayer(){
+  const el=document.getElementById('multiplayer-content');
+  el.innerHTML='<div style="text-align:center;padding:30px"><span class="spinner"></span> Memuat...</div>';
+  const myCode=localStorage.getItem('tx_my_league_'+currentUser)||null;
+  const cloud=isCloudReady();
+  const statusHtml='<div class="mp-status">'+(cloud?
+    '<span style="color:var(--green)">🟢 Cloud aktif (JSONBin) — data tersinkron lintas perangkat!</span>':
+    '<span style="color:var(--accent3)">🟡 Mode lokal — untuk lintas perangkat, isi JSONBIN_KEY di script (lihat Help)</span>')+'</div>';
+  const tabsHtml='<div class="tabs">'+
+    '<div class="tab '+(myCode?'active':'')+'" id="mp-tab-my" onclick="switchMpTab(\'my\')">🌐 Liga Saya</div>'+
+    '<div class="tab '+(myCode?'':'active')+'" id="mp-tab-create" onclick="switchMpTab(\'create\')">➕ Buat Liga</div>'+
+    '<div class="tab" id="mp-tab-join" onclick="switchMpTab(\'join\')">🔑 Join Liga</div>'+
+    '</div>';
+  const createPanel='<div id="mp-create" style="display:'+(myCode?'none':'block')+'" class="fade-in"><div class="card">'+
+    '<div class="card-title" style="margin-bottom:14px">➕ Buat Liga Baru</div>'+
+    '<div style="background:var(--bg3);border-radius:8px;padding:12px;margin-bottom:14px;font-size:.85em;color:var(--text2)">'+
+    '📌 Bagikan <strong>kode 6 karakter</strong> ke teman.<br>'+(cloud?'✅ Cloud aktif → teman bisa join dari HP/laptop lain!':'⚠️ Mode lokal → teman harus di browser yang sama.')+
+    '</div>'+
+    '<div class="form-group"><label>Nama Liga *</label><input id="ml-name" placeholder="e.g. Liga Teman 2025"></div>'+
+    '<div class="form-group"><label>Maks Pemain</label>'+
+    '<select id="ml-maxplayers" style="background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px;color:var(--text);width:100%;font-family:\'Rajdhani\',sans-serif">'+
+    '<option value="4">4 Pemain</option><option value="8" selected>8 Pemain</option><option value="16">16 Pemain</option><option value="32">32 Pemain</option></select></div>'+
+    '<button id="btn-create-liga" class="btn btn-primary" onclick="createMultiLeague()" style="width:100%;justify-content:center;font-size:1.05em;padding:12px">🚀 Buat Liga Sekarang</button>'+
+    '</div></div>';
+  const joinPanel='<div id="mp-join" style="display:none" class="fade-in">'+
+    '<div class="card" style="margin-bottom:14px"><div class="card-title" style="margin-bottom:14px">🔑 Join Liga dengan Kode</div>'+
+    '<div class="form-group"><label>Kode Liga</label>'+
+    '<input id="ml-join-code" placeholder="XXXXXX" maxlength="8" style="text-transform:uppercase;letter-spacing:5px;font-family:\'Orbitron\',sans-serif;font-size:1.3em;text-align:center" oninput="this.value=this.value.toUpperCase()"></div>'+
+    '<button id="btn-join-liga" class="btn btn-success" onclick="joinMultiLeague()" style="width:100%;justify-content:center;font-size:1.05em;padding:12px">✅ Join Liga</button>'+
+    '</div>'+
+    '<div id="mp-public-list" class="card"><div class="card-title" style="margin-bottom:12px">🌐 Liga Tersedia</div><div style="color:var(--text3);text-align:center;padding:14px"><span class="spinner"></span></div></div>'+
+    '</div>';
+  const myPanel='<div id="mp-my" style="display:'+(myCode?'block':'none')+'" class="fade-in"></div>';
+  el.innerHTML=statusHtml+tabsHtml+myPanel+createPanel+joinPanel;
+  if(myCode) renderMyLeague(myCode);
+  loadPublicLeagues();
+}
+
+async function renderMyLeague(code){
+  const myDiv=document.getElementById('mp-my');if(!myDiv)return;
+  try{
+    const league=await mlGet(code);
+    if(!league||league.status==='deleted'){
+      localStorage.removeItem('tx_my_league_'+currentUser);
+      myDiv.innerHTML='<div class="card" style="text-align:center;padding:30px;color:var(--text3)">Liga tidak ditemukan.<br><button class="btn btn-secondary" style="margin-top:12px" onclick="localStorage.removeItem(\'tx_my_league_\'+currentUser);renderPage(\'multiplayer\')">Reset</button></div>';
+      return;
+    }
+    const players=Object.values(league.players||{}).sort((a,b)=>b.pts-a.pts||(b.gd||0)-(a.gd||0));
+    const isCreator=league.creator===currentUser;
+    myDiv.innerHTML=
+      '<div class="card" style="margin-bottom:14px">'+
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">'+
+      '<div><div style="font-family:\'Bebas Neue\',sans-serif;font-size:1.9em;color:var(--accent)">'+league.name+'</div>'+
+      '<div style="color:var(--text2);font-size:.88em">Creator: <strong>'+league.creator+'</strong> • '+players.length+'/'+league.maxPlayers+' pemain • '+(league.status==='open'?'🟢 Terbuka':'🔴 Tertutup')+'</div></div>'+
+      '<div style="text-align:center">'+
+      '<div style="color:var(--text3);font-size:.8em;margin-bottom:4px">Kode Undangan:</div>'+
+      '<div class="league-code-box">'+league.code+'</div>'+
+      '<button class="btn btn-secondary btn-sm" onclick="navigator.clipboard.writeText(\''+league.code+'\').then(()=>showNotif(\'Kode disalin! 📋\',\'success\'))">📋 Copy Kode</button>'+
+      '</div></div></div>'+
+      '<div class="card">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">'+
+      '<div class="card-title">🏆 Klasemen Liga</div>'+
+      '<button id="btn-update-stats" class="btn btn-primary btn-sm" onclick="submitWeeklyResult(\''+league.code+'\')">📤 Update Stats Saya</button>'+
+      '</div>'+
+      '<div style="overflow-x:auto"><table class="table">'+
+      '<thead><tr><th>#</th><th>Manajer</th><th>Klub</th><th>⭐Mgr</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th><th>Status</th></tr></thead>'+
+      '<tbody>'+players.map((p,i)=>{
+        const isMe=p.username===currentUser;
+        const minsAgo=p.updatedAt?Math.round((Date.now()-p.updatedAt)/60000):9999;
+        const fresh=minsAgo<5?'<span style="color:var(--green)">🟢</span>':minsAgo<60?'<span style="color:var(--accent3)">🟡'+minsAgo+'m</span>':'<span style="color:var(--text3)">⚪</span>';
+        const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':''+(i+1);
+        return '<tr style="'+(isMe?'background:rgba(0,212,255,.07);font-weight:700':'')+'">'+
+          '<td style="color:var(--accent3)">'+medal+'</td>'+
+          '<td>'+p.username+(isMe?' 🎖️':'')+'</td>'+
+          '<td>'+(p.clubLogo||'⚽')+' '+(p.clubName||'?')+'</td>'+
+          '<td style="color:var(--accent)">'+(p.managerRating||50)+'</td>'+
+          '<td>'+(p.p||0)+'</td><td style="color:var(--green)">'+(p.w||0)+'</td><td>'+(p.d||0)+'</td>'+
+          '<td style="color:var(--red)">'+(p.l||0)+'</td><td>'+(p.gf||0)+'</td><td>'+(p.ga||0)+'</td>'+
+          '<td style="color:'+((p.gd||0)>=0?'var(--green)':'var(--red)')+'">'+((p.gd||0)>=0?'+':'')+(p.gd||0)+'</td>'+
+          '<td style="font-family:\'Orbitron\',sans-serif;font-weight:700;color:var(--accent3)">'+(p.pts||0)+'</td>'+
+          '<td>'+fresh+'</td></tr>';
+      }).join('')+'</tbody></table></div>'+
+      '<div style="margin-top:10px;background:var(--bg3);border-radius:8px;padding:10px;font-size:.82em;color:var(--text2)">'+
+      'ℹ️ Klik <strong style="color:var(--accent)">Update Stats</strong> setelah bermain. Data tersimpan '+(isCloudReady()?'di cloud (lintas perangkat)':'di browser lokal')+'.</div></div>'+
+      '<div style="margin-top:12px">'+(isCreator?
+        '<button class="btn btn-danger btn-sm" onclick="leaveLeague(\''+league.code+'\')">🗑️ Hapus Liga</button>':
+        '<button class="btn btn-secondary btn-sm" onclick="leaveLeague(\''+league.code+'\')">🚪 Keluar dari Liga</button>')+
+      '</div>';
+  }catch(err){
+    if(myDiv) myDiv.innerHTML='<div class="card" style="color:var(--red)">Error: '+err.message+'</div>';
+  }
+}
+
+async function loadPublicLeagues(){
+  const el=document.getElementById('mp-public-list');if(!el)return;
+  try{
+    const all=await mlGetAll();
+    const open=Object.values(all).filter(l=>l&&l.status==='open'&&Object.keys(l.players||{}).length<(l.maxPlayers||8));
+    if(!open.length){el.innerHTML='<div class="card-title" style="margin-bottom:12px">🌐 Liga Tersedia</div><div style="color:var(--text3);text-align:center;padding:14px">Belum ada liga publik.</div>';return;}
+    el.innerHTML='<div class="card-title" style="margin-bottom:12px">🌐 Liga Tersedia (klik untuk isi kode)</div>'+
+      open.slice(0,8).map(l=>'<div class="league-card" onclick="document.getElementById(\'ml-join-code\').value=\''+l.code+'\';switchMpTab(\'join\')">'+
+        '<div style="display:flex;justify-content:space-between;align-items:center">'+
+        '<div><div style="font-weight:700">'+l.name+'</div>'+
+        '<div style="color:var(--text2);font-size:.82em">oleh '+l.creator+' • '+Object.keys(l.players||{}).length+'/'+l.maxPlayers+'</div></div>'+
+        '<div class="league-code-box" style="font-size:1em;padding:6px 14px;margin:0">'+l.code+'</div></div></div>').join('');
+  }catch(err){
+    if(el) el.innerHTML='<div class="card-title" style="margin-bottom:12px">🌐 Liga Tersedia</div><div style="color:var(--text3);text-align:center;padding:14px">Gagal load liga.</div>';
+  }
+}
+
+function switchMpTab(t){
+  ['my','create','join'].forEach(k=>{
+    const el=document.getElementById('mp-'+k),tab=document.getElementById('mp-tab-'+k);
+    if(el) el.style.display=k===t?'block':'none';
+    if(tab) tab.classList.toggle('active',k===t);
+  });
+}
