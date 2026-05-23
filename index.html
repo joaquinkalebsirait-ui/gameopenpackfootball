@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FPC - Build Your Best Team</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root{--cr:#FDF6EC;--cr2:#F5E8D0;--cr3:#EDD9B0;--gd:#C8922A;--gd2:#E8B84B;--gd3:#F5D080;--dk:#2C1A06;--dk2:#4A2E0A;--dk3:#7A4E1A;--r2:#E74C3C;--b3:#5BA3D9;--g2:#27AE60;--g3:#6ECB94;--p3:#C39BD3;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--cr);color:var(--dk);font-family:'Nunito',sans-serif;min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:7px;}::-webkit-scrollbar-track{background:var(--cr2);}::-webkit-scrollbar-thumb{background:var(--gd);border-radius:4px;}
+/* HEADER */
+#hdr{background:linear-gradient(135deg,#2C1A06,#4A2E0A 60%,#7A4E1A);padding:10px 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid var(--gd);flex-wrap:wrap;gap:7px;}
+.logo{font-family:'Orbitron',sans-serif;font-size:1.3em;color:var(--gd2);letter-spacing:2px;}
+.logo span{color:var(--cr3);font-size:.4em;display:block;letter-spacing:4px;font-family:'Nunito',sans-serif;font-weight:700;}
+.tkn-bar{display:flex;gap:5px;flex-wrap:wrap;align-items:center;}
+.tb{background:rgba(255,255,255,.08);border:1px solid;border-radius:14px;padding:3px 9px;font-size:.74em;font-weight:800;display:flex;align-items:center;gap:4px;}
+.tb.normal{border-color:#BDC3C7;color:#BDC3C7;}.tb.silver{border-color:#A8C0D0;color:#A8C0D0;}.tb.golden{border-color:#E8B84B;color:#E8B84B;}.tb.elite{border-color:#C39BD3;color:#C39BD3;}.tb.legend{border-color:#FF9D9D;color:#FF9D9D;}
+/* MONEY BAR */
+#mbar{background:#4A2E0A;padding:6px 18px;display:flex;align-items:center;gap:14px;border-bottom:2px solid var(--cr3);flex-wrap:wrap;}
+.mdisp{font-family:'Orbitron',sans-serif;font-size:.92em;color:#E8B84B;font-weight:700;}
+/* OVR BAR */
+#obar{background:linear-gradient(135deg,#2C1A06 60%,#4A2E0A);padding:9px 18px;display:flex;align-items:center;gap:12px;border-bottom:2px solid var(--cr3);flex-wrap:wrap;}
+.ovr-n{font-family:'Orbitron',sans-serif;font-size:2.4em;font-weight:900;line-height:1;min-width:75px;}
+.ovr-bw{flex:1;min-width:120px;}.ovr-b{height:9px;background:rgba(255,255,255,.1);border-radius:5px;overflow:hidden;margin-top:3px;}.ovr-bf{height:100%;border-radius:5px;transition:width 1s cubic-bezier(.4,0,.2,1);}
+.ms-nxt{font-size:.7em;color:var(--cr3);}
+/* NAV */
+#nav{background:#4A2E0A;display:flex;border-bottom:2px solid var(--gd);overflow-x:auto;}
+.nb{flex:1;min-width:65px;padding:9px 4px;text-align:center;cursor:pointer;font-weight:800;font-size:.75em;color:var(--cr3);border:none;background:none;white-space:nowrap;}
+.nb:hover{background:rgba(200,146,42,.15);color:#E8B84B;}.nb.active{background:var(--gd);color:#2C1A06;}
+/* PAGES */
+.pg{display:none;padding:14px;min-height:calc(100vh - 180px);}.pg.active{display:block;}
+.sec-t{font-family:'Bebas Neue',sans-serif;font-size:1.6em;color:#4A2E0A;border-bottom:3px solid var(--gd);padding-bottom:3px;margin-bottom:13px;letter-spacing:1px;}
+.sub-t{font-size:.88em;font-weight:800;color:#7A4E1A;margin:11px 0 6px;text-transform:uppercase;letter-spacing:.5px;}
+.sep{border:none;border-top:1px solid var(--cr3);margin:12px 0;}
+/* PACK CARD */
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:13px;margin-bottom:18px;}
+.pkc{border-radius:16px;padding:0;cursor:pointer;transition:all .25s;position:relative;overflow:hidden;}
+.pkc:hover{transform:translateY(-5px);box-shadow:0 12px 35px rgba(0,0,0,.35);}
+.pkc.locked{opacity:.5;cursor:not-allowed;}.pkc.locked:hover{transform:none;box-shadow:none;}
+/* Pack top banner area */
+.pk-banner{padding:14px 14px 8px;position:relative;}
+.pk-icon{font-size:2.2em;margin-bottom:5px;}
+.pk-name{font-family:'Bebas Neue',sans-serif;font-size:1.35em;letter-spacing:1px;margin-bottom:2px;}
+.pk-desc{font-size:.68em;opacity:.82;line-height:1.3;margin-bottom:7px;}
+.pk-cost{font-weight:900;font-size:.88em;padding:3px 11px;border-radius:14px;display:inline-block;margin-bottom:5px;}
+/* BIG STAR panel */
+.pk-bigstar{background:rgba(0,0,0,.3);border-top:1px solid rgba(255,255,255,.1);padding:9px 12px;display:flex;align-items:center;gap:9px;}
+.pk-bs-icon{font-size:1.8em;flex-shrink:0;}
+.pk-bs-info{}
+.pk-bs-label{font-size:.6em;font-weight:700;opacity:.7;text-transform:uppercase;letter-spacing:1px;}
+.pk-bs-name{font-size:.82em;font-weight:900;line-height:1.2;}
+.pk-bs-ovr{font-family:'Orbitron',sans-serif;font-size:.78em;font-weight:700;}
+/* Pity display */
+.pk-pity{background:rgba(255,255,255,.06);padding:6px 12px;font-size:.62em;opacity:.75;display:flex;justify-content:space-between;align-items:center;}
+.pk-rates{padding:5px 12px 10px;font-size:.61em;opacity:.62;line-height:1.6;}
+/* Pack styles */
+.pk-normal{background:linear-gradient(160deg,#2A4A6A,#1A2E4A);color:#E0F0FF;border:2px solid #4A8AB5;}
+.pk-normal .pk-cost{background:rgba(74,138,181,.2);color:#A0D0F5;border:1px solid #4A8AB5;}
+.pk-silver-t{background:linear-gradient(160deg,#4A5A6A,#2C3C4C);color:#EEF2F5;border:2px solid #7A9AAA;}
+.pk-silver-t .pk-cost{background:rgba(122,154,170,.2);color:#CCE0EA;border:1px solid #7A9AAA;}
+.pk-golden{background:linear-gradient(160deg,#6A4A10,#3A2A05);color:#F8E0A0;border:2px solid #D0A030;}
+.pk-golden .pk-cost{background:rgba(200,146,42,.2);color:#E8B84B;border:1px solid #D0A030;}
+.pk-elite{background:linear-gradient(160deg,#4A0A6A,#280542);color:#E0C8F5;border:2px solid #9A4AC8;}
+.pk-elite .pk-cost{background:rgba(154,74,200,.2);color:#C390E8;border:1px solid #9A4AC8;}
+.pk-legend{background:linear-gradient(160deg,#6A0A0A,#3A0505);color:#F5C8C8;border:2px solid #C84040;}
+.pk-legend .pk-cost{background:rgba(200,64,64,.2);color:#F09090;border:1px solid #C84040;}
+.pk-worldcup{background:linear-gradient(160deg,#0A4A1A,#051A0A);color:#B5F0C8;border:2px solid #30A855;}
+.pk-worldcup .pk-cost{background:rgba(48,168,85,.2);color:#70D890;border:1px solid #30A855;}
+.pk-ballon{background:linear-gradient(160deg,#6A5A00,#3A2E00);color:#F8E890;border:2px solid #C8A818;}
+.pk-ballon .pk-cost{background:rgba(200,168,24,.2);color:#E8D060;border:1px solid #C8A818;}
+/* EVENT PACKS — vivid themed */
+.pk-halloween{background:linear-gradient(160deg,#3A1200,#1A081E);color:#FF9933;border:2px solid #FF5500;}
+.pk-halloween .pk-cost{background:rgba(255,85,0,.2);color:#FFAA55;border:1px solid #FF5500;}
+.pk-christmas{background:linear-gradient(160deg,#0A2A0A,#2A0808);color:#CCFFCC;border:2px solid #DD0000;}
+.pk-christmas .pk-cost{background:rgba(221,0,0,.18);color:#FFCCCC;border:1px solid #DD0000;}
+.pk-newyear{background:linear-gradient(160deg,#050518,#0A0A2A);color:#CCCCFF;border:2px solid #6655FF;}
+.pk-newyear .pk-cost{background:rgba(102,85,255,.18);color:#AAAAFF;border:1px solid #6655FF;}
+.pk-valentines{background:linear-gradient(160deg,#220A14,#120020);color:#FFBBD8;border:2px solid #FF1A5E;}
+.pk-valentines .pk-cost{background:rgba(255,26,94,.18);color:#FF88BB;border:1px solid #FF1A5E;}
+.pk-summer{background:linear-gradient(160deg,#321800,#001A2A);color:#FFE855;border:2px solid #FF9900;}
+.pk-summer .pk-cost{background:rgba(255,153,0,.18);color:#FFCC44;border:1px solid #FF9900;}
+.pk-elclasico{background:linear-gradient(160deg,#200000,#000020);color:#FFFFFF;border:2px solid #AAAAAA;}
+.pk-elclasico .pk-cost{background:rgba(255,255,255,.08);color:#EEE;border:1px solid #888;}
+.pk-euro{background:linear-gradient(160deg,#000A22,#08000F);color:#AACCFF;border:2px solid #0044BB;}
+.pk-euro .pk-cost{background:rgba(0,68,187,.18);color:#77AAFF;border:1px solid #0044BB;}
+.pk-totc{background:linear-gradient(160deg,#120520,#201000);color:#EEE8AA;border:2px solid #DAA520;}
+.pk-totc .pk-cost{background:rgba(218,165,32,.18);color:#FFD700;border:1px solid #DAA520;}
+.pk-goldenage{background:linear-gradient(160deg,#1A0A00,#0A0500);color:#FFDDAA;border:2px solid #CC8800;}
+.pk-goldenage .pk-cost{background:rgba(204,136,0,.18);color:#FFBB44;border:1px solid #CC8800;}
+/* PLAYER CARD */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:9px;}
+.pcard{border-radius:10px;overflow:hidden;transition:transform .2s;cursor:pointer;position:relative;}
+.pcard:hover{transform:scale(1.05);}
+.pc-hdr{padding:7px 7px 3px;display:flex;justify-content:space-between;}
+.pc-ovr{font-family:'Orbitron',sans-serif;font-size:.9em;font-weight:900;line-height:1;}
+.pc-pos{font-size:.56em;font-weight:800;margin-top:1px;}
+.pc-flag{font-size:.8em;}
+.pc-body{display:flex;flex-direction:column;align-items:center;padding:2px 6px 7px;}
+.pc-ic{font-size:2.3em;line-height:1.1;}
+.pc-cl{font-size:.58em;font-weight:800;text-align:center;opacity:.75;}
+.pc-nm{font-weight:900;text-align:center;font-size:.67em;padding:0 4px 5px;letter-spacing:.2px;}
+.pc-pr{font-size:.57em;text-align:center;padding:0 4px 5px;font-weight:700;}
+/* Card tier styles */
+.c-bronze{background:linear-gradient(160deg,#C87941,#7A3A10);color:#FAD5B0;border:2px solid #C87941;}
+.c-silver{background:linear-gradient(160deg,#7A8A95,#3A4A55);color:#E8F0F5;border:2px solid #8A9BA8;}
+.c-gold{background:linear-gradient(160deg,#B8920A,#6A4A00);color:#FAE5A0;border:2px solid #E8B84B;}
+.c-special{background:linear-gradient(160deg,#2A5A8A,#0A2044);color:#B5D8FA;border:2px solid #5BA3D9;}
+.c-elite{background:linear-gradient(160deg,#6A1A8A,#3A0A5A);color:#E8C5FA;border:2px solid #C39BD3;}
+.c-legend{background:linear-gradient(160deg,#8A1A1A,#4A0808);color:#FAC5C5;border:2px solid #FF9D9D;}
+/* EVENT CARDS — vivid distinct */
+.c-halloween{background:linear-gradient(160deg,#3A1200,#1A0825);color:#FF9933;border:3px solid #FF5500;box-shadow:0 0 12px rgba(255,85,0,.35);}
+.c-halloween .pc-ovr,.c-halloween .pc-pos{color:#FFAA33;}
+.c-christmas{background:linear-gradient(160deg,#E8FFF8,#CCF5E0);color:#006622;border:3px solid #CC0000;box-shadow:0 0 12px rgba(200,0,0,.3);}
+.c-christmas .pc-ovr,.c-christmas .pc-pos{color:#CC0000;}.c-christmas .pc-nm,.c-christmas .pc-cl,.c-christmas .pc-pr{color:#004422;}
+.c-newyear{background:linear-gradient(160deg,#060618,#0C0C2A);color:#CCCCFF;border:3px solid #5544FF;box-shadow:0 0 12px rgba(85,68,255,.4);}
+.c-newyear .pc-ovr{color:#AAAAFF;}
+.c-valentines{background:linear-gradient(160deg,#FFE0EE,#F5B8D0);color:#880030;border:3px solid #FF1155;box-shadow:0 0 12px rgba(255,17,85,.35);}
+.c-valentines .pc-ovr,.c-valentines .pc-pos{color:#CC0040;}.c-valentines .pc-nm,.c-valentines .pc-cl{color:#660025;}
+.c-summer{background:linear-gradient(160deg,#FFF8D0,#FFE888);color:#994400;border:3px solid #FF8800;box-shadow:0 0 12px rgba(255,136,0,.35);}
+.c-summer .pc-ovr,.c-summer .pc-pos{color:#CC5500;}.c-summer .pc-nm,.c-summer .pc-cl{color:#663300;}
+.c-totc{background:linear-gradient(160deg,#1A1000,#0A0A20);color:#FFD700;border:3px solid #DAA520;box-shadow:0 0 15px rgba(218,165,32,.4);}
+.c-totc .pc-ovr{color:#FFD700;}
+.c-euro{background:linear-gradient(160deg,#000A22,#07000F);color:#AACCFF;border:3px solid #003EAA;box-shadow:0 0 12px rgba(0,62,170,.4);}
+.c-euro .pc-ovr{color:#77AAFF;}
+/* SQUAD */
+.sq-card{background:linear-gradient(135deg,#2C1A06,#4A2E0A);border-radius:14px;padding:14px;margin-bottom:14px;color:var(--cr);display:flex;align-items:center;gap:14px;border:2px solid var(--gd);flex-wrap:wrap;}
+.sq-ovr{font-family:'Orbitron',sans-serif;font-size:2.5em;font-weight:900;color:#E8B84B;line-height:1;text-align:center;min-width:80px;}
+.sq-ovr span{font-size:.25em;display:block;color:var(--cr3);letter-spacing:3px;font-family:'Nunito',sans-serif;}
+.sq-stats{flex:1;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;min-width:170px;}
+.sq-s{background:rgba(255,255,255,.06);border-radius:6px;padding:6px;text-align:center;}
+.sq-s .sv{font-family:'Orbitron',sans-serif;font-size:.95em;font-weight:700;color:#F5D080;}
+.sq-s .sl{font-size:.63em;color:var(--cr3);}
+/* PITCH */
+.pitch{background:linear-gradient(180deg,#1a6b25 0%,#228c30 40%,#1a6b25 100%);border-radius:12px;padding:9px;min-height:360px;border:3px solid rgba(255,255,255,.2);margin-bottom:13px;}
+.pitch-row{display:flex;justify-content:space-evenly;padding:4px 0;}
+.slot-c{width:60px;height:73px;border-radius:8px;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform .18s;}
+.slot-c.filled{border-color:rgba(255,255,255,.7);background:#2C1A06;}
+.slot-c.empty{border-style:dashed;}
+.s-ic{font-size:1.25em;line-height:1.2;}.s-ov{font-family:'Orbitron',sans-serif;font-size:.78em;font-weight:700;}.s-nm{font-size:.52em;font-weight:700;color:var(--cr);max-width:56px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}.s-ps{font-size:.5em;color:var(--cr3);}
+/* BENCH */
+.bench-row{display:flex;gap:6px;flex-wrap:wrap;}
+.bc{width:58px;background:var(--cr2);border:2px solid var(--cr3);border-radius:8px;padding:5px 3px;text-align:center;cursor:pointer;position:relative;}
+.bc:hover{border-color:var(--gd);}
+.bc .bo{font-family:'Orbitron',sans-serif;font-size:.72em;font-weight:700;color:#4A2E0A;}
+.bc .bi{font-size:1.2em;}.bc .bn{font-size:.52em;font-weight:700;color:#7A4E1A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:54px;}.bc .bp{font-size:.5em;color:#8A9BA8;}
+.rm-b{position:absolute;top:-5px;right:-5px;width:15px;height:15px;background:#E74C3C;color:#fff;border:none;border-radius:50%;font-size:.6em;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:2;}
+.bc:hover .rm-b{display:flex;}
+/* SHOP */
+.sh-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:9px;}
+.sh-i{background:var(--cr);border:2px solid var(--cr3);border-radius:10px;padding:12px;text-align:center;transition:all .2s;}
+.sh-i:hover{border-color:var(--gd);transform:translateY(-2px);}
+.sh-ic{font-size:1.7em;margin-bottom:4px;}.sh-nm{font-weight:800;font-size:.82em;margin-bottom:3px;}
+.sh-pr{font-family:'Orbitron',sans-serif;font-size:.9em;color:#27AE60;font-weight:700;margin:4px 0;}
+.sh-btn{background:var(--gd);color:#2C1A06;border:none;padding:5px 13px;border-radius:8px;font-weight:800;font-size:.76em;cursor:pointer;}
+.sh-btn:hover{background:#E8B84B;}
+/* UPGRADE */
+.upg-z{background:var(--cr2);border:2px dashed var(--cr3);border-radius:11px;padding:14px;text-align:center;margin-bottom:13px;}
+.utk-g{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:9px 0;}
+.utk{background:var(--cr);border:2px solid var(--cr3);border-radius:8px;padding:8px 11px;text-align:center;min-width:82px;}
+.utk .uc{font-family:'Orbitron',sans-serif;font-size:1.1em;font-weight:700;}.utk .ul{font-size:.66em;color:#7A4E1A;font-weight:700;}
+.upg-pl{display:grid;grid-template-columns:repeat(auto-fill,minmax(145px,1fr));gap:8px;}
+.upc{background:var(--cr);border:2px solid var(--cr3);border-radius:8px;padding:10px;text-align:center;cursor:pointer;transition:all .2s;}
+.upc:hover{border-color:var(--gd);}.upc.sel{border-color:#E8B84B;background:rgba(200,146,42,.07);}
+/* MILESTONE */
+.ms-c{background:var(--cr2);border:2px solid var(--cr3);border-radius:10px;padding:11px;margin-bottom:7px;display:flex;align-items:center;gap:10px;}
+.ms-c.done{border-color:#27AE60;background:rgba(39,174,96,.06);}
+.ms-ov{font-family:'Orbitron',sans-serif;font-size:1.1em;font-weight:700;min-width:50px;text-align:center;}
+.ms-i{flex:1;}.ms-t{font-weight:800;font-size:.83em;color:#2C1A06;}.ms-s{font-size:.7em;color:#7A4E1A;margin-top:2px;}
+/* BTN */
+.btn{padding:7px 15px;border-radius:8px;border:none;cursor:pointer;font-weight:800;font-size:.8em;transition:all .2s;font-family:'Nunito',sans-serif;}
+.btn-g{background:var(--gd);color:#2C1A06;}.btn-g:hover{background:#E8B84B;}
+.btn-d{background:#4A2E0A;color:var(--cr);border:1px solid #7A4E1A;}.btn-d:hover{background:#2C1A06;}
+.btn-sm{padding:4px 10px;font-size:.73em;}.btn-green{background:#27AE60;color:#fff;}.btn-red{background:#E74C3C;color:#fff;}
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:1000;display:flex;align-items:center;justify-content:center;}
+.mb{background:#2C1A06;border:2px solid var(--gd);border-radius:16px;padding:20px;max-width:92vw;width:640px;max-height:92vh;overflow-y:auto;position:relative;}
+.mb h2{font-family:'Bebas Neue',sans-serif;font-size:1.8em;color:#E8B84B;letter-spacing:2px;margin-bottom:11px;text-align:center;}
+.mc{position:absolute;top:10px;right:12px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:var(--cr);width:27px;height:27px;border-radius:50%;cursor:pointer;font-size:.9em;display:flex;align-items:center;justify-content:center;}
+.mc:hover{background:#E74C3C;}
+/* REVEAL */
+.rev-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:11px;}
+.rev-c{background:#4A2E0A;border:3px solid var(--gd);border-radius:11px;padding:12px 9px;text-align:center;min-width:100px;max-width:125px;transition:all .4s;opacity:0;transform:scale(.8) rotateY(90deg);}
+.rev-c.shown{opacity:1;transform:scale(1) rotateY(0deg);}
+.rev-c.dup{border-color:#E74C3C;opacity:.55;}
+.rv-c{font-size:.63em;color:var(--cr3);margin-bottom:2px;font-weight:700;}
+.rv-p{font-size:.6em;font-weight:800;padding:2px 7px;border-radius:6px;display:inline-block;margin-bottom:4px;}
+.rv-i{font-size:2.5em;line-height:1.1;margin-bottom:2px;}
+.rv-n{font-weight:900;color:var(--cr);font-size:.75em;margin-bottom:2px;}
+.rv-o{font-family:'Orbitron',sans-serif;font-size:1.4em;font-weight:900;}
+.rv-d{font-size:.58em;color:#E74C3C;font-weight:700;margin-top:2px;}
+.rv-pr{font-size:.58em;color:#6ECB94;margin-top:2px;font-weight:700;}
+/* PICK */
+.pick-sec{margin-top:10px;text-align:center;}
+.pick-wrap{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:8px;}
+.pk-sel{cursor:pointer;border:3px solid transparent;border-radius:10px;transition:all .2s;padding:7px;min-width:85px;text-align:center;}
+.pk-sel:hover{transform:scale(1.05);}.pk-sel.chosen{border-color:#E8B84B;transform:scale(1.07);}
+.pk-sel.disabled{opacity:.3;cursor:not-allowed;pointer-events:none;}
+.pk-sel.dup-p{border-color:#E74C3C;opacity:.5;cursor:not-allowed;pointer-events:none;}
+.conf-btn{background:var(--gd);color:#2C1A06;border:none;padding:9px 24px;border-radius:13px;font-weight:900;font-size:.9em;cursor:pointer;margin-top:10px;display:none;}
+.conf-btn:hover{background:#E8B84B;}
+/* PITY BAR */
+.pity-bar{height:5px;background:rgba(255,255,255,.1);border-radius:3px;margin-top:3px;overflow:hidden;}
+.pity-bf{height:100%;border-radius:3px;transition:width .5s;}
+/* ===================== CUTSCENE ===================== */
+#cs{position:fixed;inset:0;z-index:5000;display:none;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;}
+#cs.on{display:flex;}
+#cs-bg{position:absolute;inset:0;}
+#cs-pt{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.csp{position:absolute;border-radius:50%;animation:cspf 3s linear infinite;}
+@keyframes cspf{0%{transform:translateY(110vh) scale(0);opacity:0}15%{opacity:1}100%{transform:translateY(-40px) scale(1.2);opacity:0}}
+#cs-decos{position:absolute;inset:0;pointer-events:none;}
+.csd{position:absolute;animation:csdf 4s ease-in-out infinite;pointer-events:none;}
+@keyframes csdf{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-14px) rotate(8deg)}}
+#cs-main{position:relative;z-index:10;text-align:center;padding:25px;max-width:560px;width:95%;}
+/* Each phase fades in sequentially */
+.cph{opacity:0;transition:opacity .65s ease,transform .65s ease;margin-bottom:8px;}
+.cph.tr-up{transform:translateY(22px);}
+.cph.tr-pop{transform:scale(.25);}
+.cph.vis{opacity:1;transform:translateY(0) scale(1)!important;}
+#cs-badge{font-size:.82em;letter-spacing:3px;font-weight:900;padding:5px 16px;border-radius:18px;}
+#cs-country-flag{font-size:2.3em;}
+#cs-country-name{font-family:'Bebas Neue',sans-serif;font-size:1.6em;letter-spacing:3px;}
+#cs-pos-box{display:inline-block;font-size:1em;font-weight:900;padding:5px 20px;border-radius:14px;letter-spacing:2px;font-family:'Bebas Neue',sans-serif;}
+#cs-club-icon{font-size:1.8em;}
+#cs-club-name{font-family:'Bebas Neue',sans-serif;font-size:1em;letter-spacing:2px;}
+#cs-pic{font-size:5.5em;line-height:1.1;}
+#cs-name{font-family:'Orbitron',sans-serif;font-size:1.7em;font-weight:900;line-height:1.2;}
+#cs-ovr{font-family:'Orbitron',sans-serif;font-size:3.2em;font-weight:900;}
+#cs-btn{padding:10px 28px;border-radius:16px;border:none;font-weight:900;font-size:.92em;cursor:pointer;letter-spacing:.5px;margin-top:4px;}
+/* Glow effects per tier/event */
+#cs.glow-legend #cs-main{filter:drop-shadow(0 0 30px rgba(255,157,157,.5));}
+#cs.glow-elite #cs-main{filter:drop-shadow(0 0 25px rgba(195,155,211,.4));}
+#cs.glow-halloween #cs-main{filter:drop-shadow(0 0 25px rgba(255,85,0,.4));}
+#cs.glow-christmas #cs-main{filter:drop-shadow(0 0 25px rgba(200,0,0,.4));}
+#cs.glow-totc #cs-main{filter:drop-shadow(0 0 28px rgba(218,165,32,.45));}
+/* NOTIF */
+#ntf{position:fixed;bottom:13px;right:13px;z-index:9999;display:flex;flex-direction:column;gap:5px;}
+.nt{background:#4A2E0A;border:2px solid var(--gd);border-radius:8px;padding:8px 12px;color:var(--cr);font-size:.78em;font-weight:700;animation:ntsl .3s ease;max-width:245px;transition:opacity .5s;}
+.nt.ok{border-color:#27AE60;}.nt.er{border-color:#E74C3C;}.nt.sp{border-color:#C39BD3;}.nt.wn{border-color:#E8B84B;}
+@keyframes ntsl{from{transform:translateY(12px);opacity:0}to{transform:translateY(0);opacity:1}}
+.ibox{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:7px;padding:8px 12px;margin:6px 0;font-size:.78em;color:var(--cr3);}
+.cf{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px;}
+.fb{padding:4px 11px;border-radius:13px;border:2px solid var(--cr3);background:var(--cr);color:#7A4E1A;font-weight:700;font-size:.72em;cursor:pointer;}
+.fb.active{background:var(--gd);border-color:var(--gd);color:#2C1A06;}
+</style>
+</head>
+<body>
+<div id="hdr">
+  <div class="logo">FPC <span>BUILD YOUR BEST TEAM</span></div>
+  <div class="tkn-bar" id="tkn-bar"></div>
+</div>
+<div id="mbar">
+  <div><div style="font-size:.68em;color:var(--cr3)">💰 COINS</div><div class="mdisp" id="coins-disp">0</div></div>
+  <button class="btn btn-d btn-sm" onclick="showPg('shop')" style="margin-left:auto">🏪 Shop</button>
+</div>
+<div id="obar">
+  <div><div style="font-size:.66em;color:var(--cr3);letter-spacing:2px;margin-bottom:1px">TEAM OVR</div>
+    <div class="ovr-n" id="ovr-n" style="color:#FFD700">0</div></div>
+  <div class="ovr-bw">
+    <div class="ms-nxt" id="ms-nxt">Reach OVR 100 for reward</div>
+    <div class="ovr-b"><div class="ovr-bf" id="ovr-bf" style="width:0%;background:linear-gradient(90deg,#C8922A,#F5D080)"></div></div>
+  </div>
+  <div style="font-size:.76em;color:var(--cr3);text-align:right">
+    <div>Squad: <strong id="sq-cnt">0</strong>/25</div>
+    <div style="font-size:.85em;margin-top:1px">Cards: <strong id="cl-cnt">0</strong></div>
+  </div>
+</div>
+<div id="nav">
+  <button class="nb active" onclick="showPg('packs')">📦 Packs</button>
+  <button class="nb" onclick="showPg('shop')">🏪 Shop</button>
+  <button class="nb" onclick="showPg('squad')">⚽ Squad</button>
+  <button class="nb" onclick="showPg('cards')">🃏 Cards</button>
+  <button class="nb" onclick="showPg('upgrade')">⬆️ Upgrade</button>
+  <button class="nb" onclick="showPg('goals')">🏆 Goals</button>
+</div>
+<!-- PAGES -->
+<div id="pg-packs" class="pg active">
+  <div class="sec-t">📦 PACK STORE</div>
+  <div class="sub-t">🔵 Standard Packs</div><div class="pgrid" id="std-pg"></div>
+  <hr class="sep">
+  <div class="sub-t">🎉 Event Packs</div><div class="pgrid" id="evt-pg"></div>
+  <hr class="sep">
+  <div class="sub-t">💎 Premium / Limited</div><div class="pgrid" id="prm-pg"></div>
+</div>
+<div id="pg-shop" class="pg">
+  <div class="sec-t">🏪 TOKEN SHOP</div>
+  <p style="color:#7A4E1A;margin-bottom:13px;font-size:.83em">Sell players to earn coins. Buy tokens to open better packs. Token harga naik sesuai kualitasnya!</p>
+  <div class="sub-t">Buy Tokens</div><div class="sh-grid" id="sh-tkn"></div>
+  <hr class="sep">
+  <div class="sub-t">Sell Players</div><div id="sell-area"></div>
+</div>
+<div id="pg-squad" class="pg">
+  <div id="sq-top"></div>
+  <div class="sec-t">📋 FORMATION (4-3-3)</div>
+  <div id="form-disp"></div>
+  <div style="margin-bottom:6px"><div class="sub-t" style="margin-bottom:5px">🪑 Bench</div><div class="bench-row" id="bench-disp"></div></div>
+  <div style="margin-top:8px;display:flex;gap:7px;flex-wrap:wrap">
+    <button class="btn btn-g btn-sm" onclick="autoFill()">🤖 Auto Best XI</button>
+    <button class="btn btn-d btn-sm" onclick="clrSq()">🗑️ Clear Squad</button>
+  </div>
+</div>
+<div id="pg-cards" class="pg">
+  <div class="sec-t">🃏 MY COLLECTION</div>
+  <div class="cf" id="coll-cf">
+    <button class="fb active" onclick="filtColl('all',this)">All</button>
+    <button class="fb" onclick="filtColl('GK',this)">GK</button>
+    <button class="fb" onclick="filtColl('DEF',this)">DEF</button>
+    <button class="fb" onclick="filtColl('MID',this)">MID</button>
+    <button class="fb" onclick="filtColl('FWD',this)">FWD</button>
+    <button class="fb" onclick="filtColl('gold',this)">Gold+</button>
+    <button class="fb" onclick="filtColl('elite',this)">Elite+</button>
+    <button class="fb" onclick="filtColl('event',this)">Event</button>
+  </div>
+  <div id="coll-grid" class="cards-grid"></div>
+</div>
+<div id="pg-upgrade" class="pg">
+  <div class="sec-t">⬆️ PLAYER UPGRADE</div>
+  <div class="upg-z">
+    <p style="font-weight:800;color:#2C1A06;margin-bottom:5px">Upgrade Tokens</p>
+    <div class="utk-g" id="upg-tkns"></div>
+    <p style="font-size:.74em;color:#7A4E1A;margin-top:5px">Drop acak dari pack. Max player OVR: 120.</p>
+  </div>
+  <div class="sub-t">Pilih Pemain</div>
+  <div id="upg-players"></div>
+  <div id="upg-actions" style="display:none;margin-top:12px;text-align:center"></div>
+</div>
+<div id="pg-goals" class="pg">
+  <div class="sec-t">🏆 MILESTONES</div>
+  <p style="color:#7A4E1A;margin-bottom:13px;font-size:.82em">Capai OVR tim lebih tinggi = token reward. Max OVR tim: 1000!</p>
+  <div id="ms-list"></div>
+</div>
+<!-- MODAL -->
+<div id="modal" class="mo" style="display:none">
+  <div class="mb"><button class="mc" onclick="closeM()">✕</button><div id="mc"></div></div>
+</div>
+<!-- CUTSCENE -->
+<div id="cs">
+  <div id="cs-bg"></div>
+  <div id="cs-pt"></div>
+  <div id="cs-decos"></div>
+  <div id="cs-main">
+    <div class="cph tr-up" id="cs-phase-badge"><span id="cs-badge">★ SPECIAL ★</span></div>
+    <div class="cph tr-up" id="cs-phase-country">
+      <div id="cs-country-flag"></div>
+      <div id="cs-country-name"></div>
+    </div>
+    <div class="cph tr-up" id="cs-phase-pos"><span id="cs-pos-box">POS</span></div>
+    <div class="cph tr-up" id="cs-phase-club">
+      <div id="cs-club-icon"></div>
+      <div id="cs-club-name"></div>
+    </div>
+    <div class="cph tr-pop" id="cs-phase-pic"><div id="cs-pic">⚽</div></div>
+    <div class="cph tr-up" id="cs-phase-name"><div id="cs-name"></div></div>
+    <div class="cph tr-pop" id="cs-phase-ovr"><div id="cs-ovr"></div></div>
+    <div class="cph tr-up" id="cs-phase-btn"><button id="cs-btn" onclick="endCS()">▶ CONTINUE</button></div>
+  </div>
+</div>
+<div id="ntf"></div>
+<script>
+// ===========================================================
+// PLAYER DATABASE — ALL 399 PLAYERS FROM CSV, split by tier
+// ===========================================================
+// Tiers: legend(OVR 108-120), elite(97-107), special(86-96), gold(76-85), silver(66-75), bronze(56-65)
+// Each pack has its own pool. Players split evenly across packs by quality.
+
+const PDB = [
+/* LEGENDS (baseOvr 108-120) */
+{n:"Pelé",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Santos (Ret.)",ic:"👑",b:120},
+{n:"Diego Maradona",p:"MID",c:"Argentina",f:"🇦🇷",cl:"Napoli (Ret.)",ic:"✋",b:120},
+{n:"Johan Cruyff",p:"FWD",c:"Netherlands",f:"🇳🇱",cl:"Ajax (Ret.)",ic:"🌀",b:118},
+{n:"Zinedine Zidane",p:"MID",c:"France",f:"🇫🇷",cl:"Real Madrid (Ret.)",ic:"🎩",b:117},
+{n:"Ronaldo Nazário",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Real Madrid (Ret.)",ic:"🦷",b:119},
+{n:"Ronaldinho",p:"MID",c:"Brazil",f:"🇧🇷",cl:"Barcelona (Ret.)",ic:"🪄",b:116},
+{n:"Kaká",p:"MID",c:"Brazil",f:"🇧🇷",cl:"AC Milan (Ret.)",ic:"⭐",b:112},
+{n:"Michel Platini",p:"MID",c:"France",f:"🇫🇷",cl:"Juventus (Ret.)",ic:"🎭",b:113},
+{n:"Marco van Basten",p:"FWD",c:"Netherlands",f:"🇳🇱",cl:"AC Milan (Ret.)",ic:"🦢",b:115},
+{n:"Alfredo Di Stéfano",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Real Madrid (Ret.)",ic:"⚡",b:114},
+{n:"Ferenc Puskás",p:"FWD",c:"Hungary",f:"🇭🇺",cl:"Real Madrid (Ret.)",ic:"💥",b:113},
+{n:"Eusébio",p:"FWD",c:"Portugal",f:"🇵🇹",cl:"Benfica (Ret.)",ic:"🐆",b:110},
+{n:"Gerd Müller",p:"FWD",c:"Germany",f:"🇩🇪",cl:"Bayern (Ret.)",ic:"💣",b:114},
+{n:"George Best",p:"FWD",c:"N.Ireland",f:"🇬🇧",cl:"Man Utd (Ret.)",ic:"🌹",b:112},
+{n:"Bobby Charlton",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd (Ret.)",ic:"🎖️",b:110},
+{n:"Lev Yashin",p:"GK",c:"Russia",f:"🇷🇺",cl:"Dynamo (Ret.)",ic:"🕷️",b:116},
+{n:"Dino Zoff",p:"GK",c:"Italy",f:"🇮🇹",cl:"Juventus (Ret.)",ic:"🧤",b:109},
+{n:"Paolo Maldini",p:"DEF",c:"Italy",f:"🇮🇹",cl:"AC Milan (Ret.)",ic:"🛡️",b:114},
+{n:"Franco Baresi",p:"DEF",c:"Italy",f:"🇮🇹",cl:"AC Milan (Ret.)",ic:"🧱",b:113},
+{n:"Lionel Messi",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Inter Miami",ic:"🐐",b:120},
+{n:"Cristiano Ronaldo",p:"FWD",c:"Portugal",f:"🇵🇹",cl:"Al-Nassr",ic:"🦅",b:117},
+{n:"Xavi Hernandez",p:"MID",c:"Spain",f:"🇪🇸",cl:"Barcelona (Ret.)",ic:"🎶",b:111},
+{n:"Andrés Iniesta",p:"MID",c:"Spain",f:"🇪🇸",cl:"Barcelona (Ret.)",ic:"🌸",b:110},
+{n:"Frank Rijkaard",p:"MID",c:"Netherlands",f:"🇳🇱",cl:"AC Milan (Ret.)",ic:"💎",b:109},
+{n:"Ruud Gullit",p:"MID",c:"Netherlands",f:"🇳🇱",cl:"AC Milan (Ret.)",ic:"🦁",b:112},
+{n:"Clarence Seedorf",p:"MID",c:"Netherlands",f:"🇳🇱",cl:"AC Milan (Ret.)",ic:"💎",b:108},
+{n:"Rivaldo",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Barcelona (Ret.)",ic:"💫",b:111},
+{n:"Thierry Henry",p:"FWD",c:"France",f:"🇫🇷",cl:"Arsenal (Ret.)",ic:"⚡",b:113},
+{n:"Dennis Bergkamp",p:"FWD",c:"Netherlands",f:"🇳🇱",cl:"Arsenal (Ret.)",ic:"🎩",b:110},
+{n:"Andrea Pirlo",p:"MID",c:"Italy",f:"🇮🇹",cl:"Juventus (Ret.)",ic:"☕",b:111},
+{n:"Roberto Carlos",p:"DEF",c:"Brazil",f:"🇧🇷",cl:"Real Madrid (Ret.)",ic:"💥",b:110},
+{n:"Cafu",p:"DEF",c:"Brazil",f:"🇧🇷",cl:"AC Milan (Ret.)",ic:"🏃",b:108},
+/* ELITE (baseOvr 97-107) */
+{n:"Alessandro Nesta",p:"DEF",c:"Italy",f:"🇮🇹",cl:"AC Milan (Ret.)",ic:"🛡️",b:107},
+{n:"Fabio Cannavaro",p:"DEF",c:"Italy",f:"🇮🇹",cl:"Real Madrid (Ret.)",ic:"🧱",b:106},
+{n:"Javier Zanetti",p:"DEF",c:"Argentina",f:"🇦🇷",cl:"Inter (Ret.)",ic:"🛡️",b:105},
+{n:"Lilian Thuram",p:"DEF",c:"France",f:"🇫🇷",cl:"Juventus (Ret.)",ic:"🛡️",b:103},
+{n:"Marcel Desailly",p:"DEF",c:"France",f:"🇫🇷",cl:"Chelsea (Ret.)",ic:"🧱",b:103},
+{n:"Carles Puyol",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Barcelona (Ret.)",ic:"🦁",b:104},
+{n:"Lothar Matthäus",p:"MID",c:"Germany",f:"🇩🇪",cl:"Bayern (Ret.)",ic:"🦁",b:106},
+{n:"Patrick Vieira",p:"MID",c:"France",f:"🇫🇷",cl:"Arsenal (Ret.)",ic:"💪",b:104},
+{n:"Roy Keane",p:"MID",c:"Ireland",f:"🇮🇪",cl:"Man Utd (Ret.)",ic:"🔥",b:103},
+{n:"Paul Scholes",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd (Ret.)",ic:"🎯",b:103},
+{n:"Steven Gerrard",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Liverpool (Ret.)",ic:"🌹",b:105},
+{n:"Frank Lampard",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Chelsea (Ret.)",ic:"⚡",b:103},
+{n:"Ryan Giggs",p:"MID",c:"Wales",f:"🏴󠁧󠁢󠁷󠁬󠁳󠁿",cl:"Man Utd (Ret.)",ic:"🌊",b:102},
+{n:"David Beckham",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd (Ret.)",ic:"⚽",b:104},
+{n:"Luis Figo",p:"MID",c:"Portugal",f:"🇵🇹",cl:"Real Madrid (Ret.)",ic:"🐷",b:105},
+{n:"Eric Cantona",p:"FWD",c:"France",f:"🇫🇷",cl:"Man Utd (Ret.)",ic:"👑",b:102},
+{n:"Alan Shearer",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Newcastle (Ret.)",ic:"💥",b:104},
+{n:"Michael Owen",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Liverpool (Ret.)",ic:"⚡",b:102},
+{n:"Wayne Rooney",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd (Ret.)",ic:"🔥",b:103},
+{n:"Gabriel Batistuta",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Fiorentina (Ret.)",ic:"💣",b:106},
+{n:"Hernán Crespo",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Inter (Ret.)",ic:"🐂",b:100},
+{n:"Romário",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Vasco (Ret.)",ic:"🎯",b:104},
+{n:"Bebeto",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Flamengo (Ret.)",ic:"🪆",b:99},
+{n:"Andriy Shevchenko",p:"FWD",c:"Ukraine",f:"🇺🇦",cl:"AC Milan (Ret.)",ic:"🎯",b:104},
+{n:"Oliver Kahn",p:"GK",c:"Germany",f:"🇩🇪",cl:"Bayern (Ret.)",ic:"👊",b:107},
+{n:"Peter Schmeichel",p:"GK",c:"Denmark",f:"🇩🇰",cl:"Man Utd (Ret.)",ic:"🧤",b:106},
+{n:"Edwin van der Sar",p:"GK",c:"Netherlands",f:"🇳🇱",cl:"Man Utd (Ret.)",ic:"🧤",b:103},
+{n:"Gianluigi Buffon",p:"GK",c:"Italy",f:"🇮🇹",cl:"Juventus (Ret.)",ic:"🧤",b:107},
+{n:"Iker Casillas",p:"GK",c:"Spain",f:"🇪🇸",cl:"Real Madrid (Ret.)",ic:"🧤",b:105},
+{n:"Petr Čech",p:"GK",c:"Czech Rep.",f:"🇨🇿",cl:"Chelsea (Ret.)",ic:"🧤",b:100},
+{n:"Didier Drogba",p:"FWD",c:"Côte d'Ivoire",f:"🇨🇮",cl:"Chelsea (Ret.)",ic:"💪",b:103},
+{n:"Samuel Eto'o",p:"FWD",c:"Cameroon",f:"🇨🇲",cl:"Barcelona (Ret.)",ic:"🐆",b:102},
+{n:"George Weah",p:"FWD",c:"Liberia",f:"🇱🇷",cl:"AC Milan (Ret.)",ic:"🦁",b:99},
+{n:"Hristo Stoichkov",p:"FWD",c:"Bulgaria",f:"🇧🇬",cl:"Barcelona (Ret.)",ic:"🔥",b:100},
+{n:"Pavel Nedvěd",p:"MID",c:"Czech Rep.",f:"🇨🇿",cl:"Juventus (Ret.)",ic:"⚡",b:101},
+{n:"Michael Laudrup",p:"MID",c:"Denmark",f:"🇩🇰",cl:"Real Madrid (Ret.)",ic:"🎶",b:103},
+{n:"Brian Laudrup",p:"MID",c:"Denmark",f:"🇩🇰",cl:"Rangers (Ret.)",ic:"🦅",b:99},
+{n:"Gheorghe Hagi",p:"MID",c:"Romania",f:"🇷🇴",cl:"Barcelona (Ret.)",ic:"🎩",b:100},
+{n:"Davor Šuker",p:"FWD",c:"Croatia",f:"🇭🇷",cl:"Arsenal (Ret.)",ic:"🌟",b:99},
+{n:"Jean-Pierre Papin",p:"FWD",c:"France",f:"🇫🇷",cl:"Marseille (Ret.)",ic:"🎯",b:100},
+{n:"Laurent Blanc",p:"DEF",c:"France",f:"🇫🇷",cl:"Man Utd (Ret.)",ic:"🛡️",b:100},
+{n:"Didier Deschamps",p:"MID",c:"France",f:"🇫🇷",cl:"Juventus (Ret.)",ic:"🏆",b:99},
+{n:"David Trezeguet",p:"FWD",c:"France",f:"🇫🇷",cl:"Juventus (Ret.)",ic:"🎯",b:101},
+{n:"Roger Milla",p:"FWD",c:"Cameroon",f:"🇨🇲",cl:"Juventus (Ret.)",ic:"🕺",b:98},
+{n:"Jay-Jay Okocha",p:"MID",c:"Nigeria",f:"🇳🇬",cl:"Bolton (Ret.)",ic:"🎩",b:99},
+{n:"Nwankwo Kanu",p:"FWD",c:"Nigeria",f:"🇳🇬",cl:"Arsenal (Ret.)",ic:"🦒",b:98},
+{n:"Abedi Pelé",p:"MID",c:"Ghana",f:"🇬🇭",cl:"Marseille (Ret.)",ic:"🌟",b:98},
+{n:"Hugo Sánchez",p:"FWD",c:"Mexico",f:"🇲🇽",cl:"Real Madrid (Ret.)",ic:"🤸",b:99},
+{n:"Bobby Moore",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"West Ham (Ret.)",ic:"🏆",b:100},
+{n:"Gordon Banks",p:"GK",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Stoke (Ret.)",ic:"🧤",b:100},
+{n:"Gary Lineker",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Tottenham (Ret.)",ic:"🎯",b:101},
+{n:"Bryan Robson",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd (Ret.)",ic:"💪",b:100},
+{n:"Ian Rush",p:"FWD",c:"Wales",f:"🏴󠁧󠁢󠁷󠁬󠁳󠁿",cl:"Liverpool (Ret.)",ic:"🎯",b:100},
+{n:"Kenny Dalglish",p:"FWD",c:"Scotland",f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",cl:"Liverpool (Ret.)",ic:"🌟",b:102},
+{n:"Graeme Souness",p:"MID",c:"Scotland",f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",cl:"Liverpool (Ret.)",ic:"💪",b:99},
+{n:"Denis Law",p:"FWD",c:"Scotland",f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",cl:"Man Utd (Ret.)",ic:"⚡",b:100},
+{n:"Jimmy Greaves",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Tottenham (Ret.)",ic:"🎯",b:100},
+{n:"Just Fontaine",p:"FWD",c:"France",f:"🇫🇷",cl:"Reims (Ret.)",ic:"💥",b:101},
+{n:"Raymond Kopa",p:"MID",c:"France",f:"🇫🇷",cl:"Real Madrid (Ret.)",ic:"🌟",b:99},
+{n:"Luka Modrić",p:"MID",c:"Croatia",f:"🇭🇷",cl:"Real Madrid",ic:"🌟",b:105},
+{n:"Karim Benzema",p:"FWD",c:"France",f:"🇫🇷",cl:"Al-Ittihad",ic:"🎯",b:105},
+{n:"Kevin De Bruyne",p:"MID",c:"Belgium",f:"🇧🇪",cl:"Man City",ic:"🎯",b:107},
+{n:"Neymar Jr.",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Al-Hilal",ic:"🕺",b:105},
+{n:"Kylian Mbappé",p:"FWD",c:"France",f:"🇫🇷",cl:"Real Madrid",ic:"🚀",b:108},
+{n:"Erling Haaland",p:"FWD",c:"Norway",f:"🇳🇴",cl:"Man City",ic:"💪",b:107},
+{n:"Luis Suárez",p:"FWD",c:"Uruguay",f:"🇺🇾",cl:"Inter Miami",ic:"🐂",b:101},
+{n:"Edinson Cavani",p:"FWD",c:"Uruguay",f:"🇺🇾",cl:"Retired",ic:"🐂",b:100},
+{n:"Zlatan Ibrahimović",p:"FWD",c:"Sweden",f:"🇸🇪",cl:"Retired",ic:"🦁",b:103},
+{n:"Manuel Neuer",p:"GK",c:"Germany",f:"🇩🇪",cl:"Bayern",ic:"🧤",b:103},
+{n:"Marc-André ter Stegen",p:"GK",c:"Germany",f:"🇩🇪",cl:"Barcelona",ic:"🧤",b:101},
+{n:"Thibaut Courtois",p:"GK",c:"Belgium",f:"🇧🇪",cl:"Real Madrid",ic:"🧤",b:103},
+{n:"Alisson Becker",p:"GK",c:"Brazil",f:"🇧🇷",cl:"Liverpool",ic:"🧤",b:103},
+{n:"Jan Oblak",p:"GK",c:"Slovenia",f:"🇸🇮",cl:"Atlético",ic:"🧤",b:102},
+{n:"Virgil van Dijk",p:"DEF",c:"Netherlands",f:"🇳🇱",cl:"Liverpool",ic:"🛡️",b:103},
+{n:"Sergio Ramos",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Sevilla",ic:"💢",b:102},
+{n:"Thiago Silva",p:"DEF",c:"Brazil",f:"🇧🇷",cl:"Fluminense",ic:"🛡️",b:100},
+{n:"Raphaël Varane",p:"DEF",c:"France",f:"🇫🇷",cl:"Como",ic:"🛡️",b:100},
+{n:"Toni Kroos",p:"MID",c:"Germany",f:"🇩🇪",cl:"Retired",ic:"🎯",b:104},
+{n:"Thomas Müller",p:"MID",c:"Germany",f:"🇩🇪",cl:"Bayern",ic:"🎭",b:100},
+{n:"Robert Lewandowski",p:"FWD",c:"Poland",f:"🇵🇱",cl:"Barcelona",ic:"🦁",b:103},
+{n:"Harry Kane",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Bayern",ic:"🎯",b:104},
+{n:"Jude Bellingham",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Real Madrid",ic:"🌟",b:106},
+{n:"Emiliano Martínez",p:"GK",c:"Argentina",f:"🇦🇷",cl:"Aston Villa",ic:"🧤",b:100},
+{n:"Ederson Moraes",p:"GK",c:"Brazil",f:"🇧🇷",cl:"Man City",ic:"🧤",b:101},
+/* SPECIAL (86-96) */
+{n:"Mohamed Salah",p:"FWD",c:"Egypt",f:"🇪🇬",cl:"Liverpool",ic:"⚡",b:96},
+{n:"Vinícius Júnior",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Real Madrid",ic:"🌪️",b:96},
+{n:"Rodri",p:"MID",c:"Spain",f:"🇪🇸",cl:"Man City",ic:"🛡️",b:96},
+{n:"Marquinhos",p:"DEF",c:"Brazil",f:"🇧🇷",cl:"PSG",ic:"🛡️",b:94},
+{n:"Antonio Rüdiger",p:"DEF",c:"Germany",f:"🇩🇪",cl:"Real Madrid",ic:"🛡️",b:92},
+{n:"David Alaba",p:"DEF",c:"Austria",f:"🇦🇹",cl:"Real Madrid",ic:"🛡️",b:92},
+{n:"Kalidou Koulibaly",p:"DEF",c:"Senegal",f:"🇸🇳",cl:"Al-Hilal",ic:"🛡️",b:90},
+{n:"Joshua Kimmich",p:"MID",c:"Germany",f:"🇩🇪",cl:"Bayern",ic:"🧠",b:93},
+{n:"Casemiro",p:"MID",c:"Brazil",f:"🇧🇷",cl:"Man Utd",ic:"💪",b:92},
+{n:"N'Golo Kanté",p:"MID",c:"France",f:"🇫🇷",cl:"Al-Ittihad",ic:"🐜",b:92},
+{n:"Paul Pogba",p:"MID",c:"France",f:"🇫🇷",cl:"Juventus",ic:"💃",b:90},
+{n:"Bruno Fernandes",p:"MID",c:"Portugal",f:"🇵🇹",cl:"Man Utd",ic:"🎯",b:91},
+{n:"Bernardo Silva",p:"MID",c:"Portugal",f:"🇵🇹",cl:"Man City",ic:"🎶",b:92},
+{n:"Ilkay Gündogan",p:"MID",c:"Germany",f:"🇩🇪",cl:"Barcelona",ic:"🎯",b:90},
+{n:"Frenkie de Jong",p:"MID",c:"Netherlands",f:"🇳🇱",cl:"Barcelona",ic:"🎶",b:91},
+{n:"Son Heung-min",p:"FWD",c:"S.Korea",f:"🇰🇷",cl:"Tottenham",ic:"⚡",b:92},
+{n:"Riyad Mahrez",p:"FWD",c:"Algeria",f:"🇩🇿",cl:"Al-Ahli",ic:"🌊",b:90},
+{n:"Sadio Mané",p:"FWD",c:"Senegal",f:"🇸🇳",cl:"Al-Nassr",ic:"🦁",b:91},
+{n:"Raheem Sterling",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Chelsea",ic:"⚡",b:88},
+{n:"Jack Grealish",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man City",ic:"🌹",b:88},
+{n:"Phil Foden",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man City",ic:"🌹",b:94},
+{n:"Bukayo Saka",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Arsenal",ic:"⚡",b:93},
+{n:"Martin Ødegaard",p:"MID",c:"Norway",f:"🇳🇴",cl:"Arsenal",ic:"🌟",b:92},
+{n:"Declan Rice",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Arsenal",ic:"💪",b:91},
+{n:"Rodrygo Goes",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Real Madrid",ic:"⚡",b:91},
+{n:"Federico Valverde",p:"MID",c:"Uruguay",f:"🇺🇾",cl:"Real Madrid",ic:"⚡",b:92},
+{n:"Éder Militão",p:"DEF",c:"Brazil",f:"🇧🇷",cl:"Real Madrid",ic:"🛡️",b:91},
+{n:"Achraf Hakimi",p:"DEF",c:"Morocco",f:"🇲🇦",cl:"PSG",ic:"🏃",b:93},
+{n:"Theo Hernandez",p:"DEF",c:"France",f:"🇫🇷",cl:"AC Milan",ic:"🏃",b:91},
+{n:"Alphonso Davies",p:"DEF",c:"Canada",f:"🇨🇦",cl:"Bayern",ic:"🏃",b:91},
+{n:"Trent Alexander-Arnold",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Real Madrid",ic:"🎯",b:92},
+{n:"Andrew Robertson",p:"DEF",c:"Scotland",f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",cl:"Liverpool",ic:"⚡",b:90},
+{n:"João Cancelo",p:"DEF",c:"Portugal",f:"🇵🇹",cl:"Barcelona",ic:"🏃",b:90},
+{n:"Kyle Walker",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man City",ic:"🏃",b:89},
+{n:"Ruben Dias",p:"DEF",c:"Portugal",f:"🇵🇹",cl:"Man City",ic:"🛡️",b:91},
+{n:"John Stones",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man City",ic:"🛡️",b:89},
+{n:"Aymeric Laporte",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Al-Nassr",ic:"🛡️",b:89},
+{n:"Matthijs de Ligt",p:"DEF",c:"Netherlands",f:"🇳🇱",cl:"Bayern",ic:"🛡️",b:90},
+{n:"Memphis Depay",p:"FWD",c:"Netherlands",f:"🇳🇱",cl:"Atlético",ic:"🦁",b:88},
+{n:"Romelu Lukaku",p:"FWD",c:"Belgium",f:"🇧🇪",cl:"Roma",ic:"💪",b:90},
+{n:"Eden Hazard",p:"FWD",c:"Belgium",f:"🇧🇪",cl:"Retired",ic:"🌀",b:90},
+{n:"Christian Eriksen",p:"MID",c:"Denmark",f:"🇩🇰",cl:"Man Utd",ic:"❤️",b:88},
+{n:"Dries Mertens",p:"FWD",c:"Belgium",f:"🇧🇪",cl:"Galatasaray",ic:"🎯",b:88},
+{n:"Pierre-Emerick Aubameyang",p:"FWD",c:"Gabon",f:"🇬🇦",cl:"Marseille",ic:"🦅",b:88},
+{n:"Hakim Ziyech",p:"MID",c:"Morocco",f:"🇲🇦",cl:"Galatasaray",ic:"🌙",b:87},
+{n:"Yassine Bounou",p:"GK",c:"Morocco",f:"🇲🇦",cl:"Al-Hilal",ic:"🧤",b:88},
+{n:"Sofyan Amrabat",p:"MID",c:"Morocco",f:"🇲🇦",cl:"Fiorentina",ic:"💪",b:87},
+{n:"Angel Di Maria",p:"MID",c:"Argentina",f:"🇦🇷",cl:"Benfica",ic:"🌸",b:90},
+{n:"Lautaro Martínez",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Inter",ic:"🐂",b:93},
+{n:"Paulo Dybala",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Roma",ic:"🎭",b:89},
+{n:"Julián Álvarez",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Atlético",ic:"🐅",b:91},
+{n:"Rodrigo De Paul",p:"MID",c:"Argentina",f:"🇦🇷",cl:"Atlético",ic:"🌪️",b:89},
+{n:"Alexis Mac Allister",p:"MID",c:"Argentina",f:"🇦🇷",cl:"Liverpool",ic:"🎯",b:90},
+{n:"Enzo Fernández",p:"MID",c:"Argentina",f:"🇦🇷",cl:"Chelsea",ic:"🎶",b:90},
+{n:"Gabriel Jesus",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Arsenal",ic:"👼",b:87},
+{n:"Gabriel Martinelli",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Arsenal",ic:"🌪️",b:88},
+{n:"Bruno Guimarães",p:"MID",c:"Brazil",f:"🇧🇷",cl:"Newcastle",ic:"💪",b:89},
+{n:"Lucas Paquetá",p:"MID",c:"Brazil",f:"🇧🇷",cl:"West Ham",ic:"💃",b:88},
+{n:"Raphinha",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Barcelona",ic:"🌪️",b:90},
+{n:"Richarlison",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Tottenham",ic:"🐿️",b:88},
+{n:"Victor Osimhen",p:"FWD",c:"Nigeria",f:"🇳🇬",cl:"Napoli",ic:"🚂",b:93},
+{n:"Khvicha Kvaratskhelia",p:"FWD",c:"Georgia",f:"🇬🇪",cl:"PSG",ic:"🌟",b:92},
+{n:"Rafael Leão",p:"FWD",c:"Portugal",f:"🇵🇹",cl:"AC Milan",ic:"🌪️",b:92},
+{n:"Gavi",p:"MID",c:"Spain",f:"🇪🇸",cl:"Barcelona",ic:"🔥",b:93},
+{n:"Pedri",p:"MID",c:"Spain",f:"🇪🇸",cl:"Barcelona",ic:"🎶",b:94},
+{n:"Lamine Yamal",p:"FWD",c:"Spain",f:"🇪🇸",cl:"Barcelona",ic:"✨",b:93},
+{n:"Eduardo Camavinga",p:"MID",c:"France",f:"🇫🇷",cl:"Real Madrid",ic:"🌀",b:88},
+{n:"Aurélien Tchouaméni",p:"MID",c:"France",f:"🇫🇷",cl:"Real Madrid",ic:"💪",b:90},
+{n:"Nicolò Barella",p:"MID",c:"Italy",f:"🇮🇹",cl:"Inter",ic:"⚡",b:92},
+{n:"Alessandro Bastoni",p:"DEF",c:"Italy",f:"🇮🇹",cl:"Inter",ic:"🛡️",b:91},
+{n:"Federico Chiesa",p:"FWD",c:"Italy",f:"🇮🇹",cl:"Liverpool",ic:"⚡",b:89},
+{n:"Gianluigi Donnarumma",p:"GK",c:"Italy",f:"🇮🇹",cl:"PSG",ic:"🧤",b:92},
+{n:"Mike Maignan",p:"GK",c:"France",f:"🇫🇷",cl:"AC Milan",ic:"🧤",b:91},
+{n:"Dani Carvajal",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Real Madrid",ic:"🛡️",b:91},
+{n:"Josško Gvardiol",p:"DEF",c:"Croatia",f:"🇭🇷",cl:"Man City",ic:"🛡️",b:90},
+{n:"Moussa Diaby",p:"FWD",c:"France",f:"🇫🇷",cl:"Al-Ittihad",ic:"⚡",b:88},
+{n:"Christopher Nkunku",p:"FWD",c:"France",f:"🇫🇷",cl:"Chelsea",ic:"🌟",b:90},
+{n:"Kingsley Coman",p:"FWD",c:"France",f:"🇫🇷",cl:"Bayern",ic:"🏃",b:89},
+{n:"Ousmane Dembélé",p:"FWD",c:"France",f:"🇫🇷",cl:"PSG",ic:"⚡",b:90},
+{n:"Randal Kolo Muani",p:"FWD",c:"France",f:"🇫🇷",cl:"Juventus",ic:"🏃",b:88},
+{n:"Marcus Thuram",p:"FWD",c:"France",f:"🇫🇷",cl:"Inter",ic:"🏃",b:90},
+{n:"Serge Gnabry",p:"FWD",c:"Germany",f:"🇩🇪",cl:"Bayern",ic:"⚡",b:88},
+{n:"Leroy Sané",p:"FWD",c:"Germany",f:"🇩🇪",cl:"Bayern",ic:"🌪️",b:89},
+{n:"Kai Havertz",p:"MID",c:"Germany",f:"🇩🇪",cl:"Arsenal",ic:"🦅",b:88},
+{n:"Jamal Musiala",p:"MID",c:"Germany",f:"🇩🇪",cl:"Bayern",ic:"🎭",b:93},
+{n:"Florian Wirtz",p:"MID",c:"Germany",f:"🇩🇪",cl:"Leverkusen",ic:"🎯",b:92},
+{n:"Christian Pulisic",p:"FWD",c:"USA",f:"🇺🇸",cl:"AC Milan",ic:"⭐",b:87},
+{n:"Hidetoshi Nakata",p:"MID",c:"Japan",f:"🇯🇵",cl:"Roma (Ret.)",ic:"🌸",b:87},
+{n:"Park Ji-sung",p:"MID",c:"S.Korea",f:"🇰🇷",cl:"Man Utd (Ret.)",ic:"🏃",b:87},
+{n:"Rafael Márquez",p:"DEF",c:"Mexico",f:"🇲🇽",cl:"Barcelona (Ret.)",ic:"🛡️",b:89},
+{n:"Iñaki Williams",p:"FWD",c:"Spain",f:"🇪🇸",cl:"Athletic",ic:"⚡",b:86},
+{n:"Mikel Oyarzabal",p:"FWD",c:"Spain",f:"🇪🇸",cl:"Real Sociedad",ic:"🎯",b:88},
+{n:"Mikel Merino",p:"MID",c:"Spain",f:"🇪🇸",cl:"Arsenal",ic:"💪",b:88},
+/* GOLD (76-85) */
+{n:"Nico Williams",p:"FWD",c:"Spain",f:"🇪🇸",cl:"Athletic",ic:"🌪️",b:85},
+{n:"Cole Palmer",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Chelsea",ic:"🎯",b:85},
+{n:"Alejandro Garnacho",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Man Utd",ic:"⚡",b:81},
+{n:"Rasmus Højlund",p:"FWD",c:"Denmark",f:"🇩🇰",cl:"Man Utd",ic:"🏃",b:80},
+{n:"Kobbie Mainoo",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd",ic:"🌱",b:79},
+{n:"Endrick",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Real Madrid",ic:"🌱",b:80},
+{n:"Arda Güler",p:"MID",c:"Turkey",f:"🇹🇷",cl:"Real Madrid",ic:"🌟",b:82},
+{n:"Bradley Barcola",p:"FWD",c:"France",f:"🇫🇷",cl:"PSG",ic:"⚡",b:82},
+{n:"Warren Zaïre-Emery",p:"MID",c:"France",f:"🇫🇷",cl:"PSG",ic:"🌱",b:81},
+{n:"Martin Baturina",p:"MID",c:"Croatia",f:"🇭🇷",cl:"Dinamo Zagreb",ic:"🎶",b:79},
+{n:"Joao Neves",p:"MID",c:"Portugal",f:"🇵🇹",cl:"PSG",ic:"🌱",b:83},
+{n:"Antonio Silva",p:"DEF",c:"Portugal",f:"🇵🇹",cl:"Benfica",ic:"🛡️",b:81},
+{n:"Gonçalo Ramos",p:"FWD",c:"Portugal",f:"🇵🇹",cl:"PSG",ic:"🎯",b:83},
+{n:"Xavi Simons",p:"MID",c:"Netherlands",f:"🇳🇱",cl:"PSG",ic:"🎯",b:83},
+{n:"Lois Openda",p:"FWD",c:"Belgium",f:"🇧🇪",cl:"Leipzig",ic:"⚡",b:82},
+{n:"Benjamin Šeško",p:"FWD",c:"Slovenia",f:"🇸🇮",cl:"Leipzig",ic:"🌪️",b:82},
+{n:"Karim Adeyemi",p:"FWD",c:"Germany",f:"🇩🇪",cl:"Dortmund",ic:"⚡",b:82},
+{n:"Niclas Füllkrug",p:"FWD",c:"Germany",f:"🇩🇪",cl:"West Ham",ic:"🎯",b:83},
+{n:"Jonas Hofmann",p:"MID",c:"Germany",f:"🇩🇪",cl:"Leverkusen",ic:"🏃",b:80},
+{n:"Julian Brandt",p:"MID",c:"Germany",f:"🇩🇪",cl:"Dortmund",ic:"🌟",b:82},
+{n:"Leon Goretzka",p:"MID",c:"Germany",f:"🇩🇪",cl:"Bayern",ic:"💪",b:84},
+{n:"Nico Schlotterbeck",p:"DEF",c:"Germany",f:"🇩🇪",cl:"Dortmund",ic:"🛡️",b:82},
+{n:"Benjamin Pavard",p:"DEF",c:"France",f:"🇫🇷",cl:"Inter",ic:"🛡️",b:83},
+{n:"Dayot Upamecano",p:"DEF",c:"France",f:"🇫🇷",cl:"Bayern",ic:"🛡️",b:84},
+{n:"Ibrahima Konaté",p:"DEF",c:"France",f:"🇫🇷",cl:"Liverpool",ic:"🛡️",b:84},
+{n:"William Saliba",p:"DEF",c:"France",f:"🇫🇷",cl:"Arsenal",ic:"🛡️",b:85},
+{n:"Jules Koundé",p:"DEF",c:"France",f:"🇫🇷",cl:"Barcelona",ic:"🛡️",b:84},
+{n:"Lucas Hernandez",p:"DEF",c:"France",f:"🇫🇷",cl:"PSG",ic:"🛡️",b:82},
+{n:"Nacho Fernández",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Al-Qadsiah",ic:"🛡️",b:82},
+{n:"Lucas Vázquez",p:"MID",c:"Spain",f:"🇪🇸",cl:"Real Madrid",ic:"🏃",b:80},
+{n:"Álvaro Morata",p:"FWD",c:"Spain",f:"🇪🇸",cl:"AC Milan",ic:"🏃",b:83},
+{n:"Koke",p:"MID",c:"Spain",f:"🇪🇸",cl:"Atlético",ic:"💙",b:83},
+{n:"Marcos Llorente",p:"MID",c:"Spain",f:"🇪🇸",cl:"Atlético",ic:"⚡",b:82},
+{n:"Martin Zubimendi",p:"MID",c:"Spain",f:"🇪🇸",cl:"Arsenal",ic:"🧱",b:84},
+{n:"Robin Le Normand",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Atlético",ic:"🛡️",b:83},
+{n:"Álex Grimaldo",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Leverkusen",ic:"🏃",b:84},
+{n:"Aleix García",p:"MID",c:"Spain",f:"🇪🇸",cl:"Leverkusen",ic:"🎯",b:83},
+{n:"Unai Simón",p:"GK",c:"Spain",f:"🇪🇸",cl:"Athletic",ic:"🧤",b:84},
+{n:"Kepa Arrizabalaga",p:"GK",c:"Spain",f:"🇪🇸",cl:"Real Madrid",ic:"🧤",b:82},
+{n:"David Raya",p:"GK",c:"Spain",f:"🇪🇸",cl:"Arsenal",ic:"🧤",b:84},
+{n:"Jordan Pickford",p:"GK",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Everton",ic:"🧤",b:84},
+{n:"Kieran Trippier",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Newcastle",ic:"🎯",b:83},
+{n:"Ben White",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Arsenal",ic:"🛡️",b:84},
+{n:"Marc Guéhi",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Crystal Palace",ic:"🛡️",b:83},
+{n:"Reece James",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Chelsea",ic:"🛡️",b:84},
+{n:"James Maddison",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Tottenham",ic:"🎯",b:83},
+{n:"Mason Mount",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd",ic:"🌟",b:82},
+{n:"Jarrod Bowen",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"West Ham",ic:"⚡",b:82},
+{n:"Ollie Watkins",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Aston Villa",ic:"🏃",b:84},
+{n:"Ivan Toney",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Al-Ahli",ic:"💪",b:81},
+{n:"Adrien Rabiot",p:"MID",c:"France",f:"🇫🇷",cl:"Marseille",ic:"🎯",b:82},
+{n:"Youssouf Fofana",p:"MID",c:"France",f:"🇫🇷",cl:"Chelsea",ic:"💪",b:83},
+{n:"Matteo Guendouzi",p:"MID",c:"France",f:"🇫🇷",cl:"Marseille",ic:"💪",b:82},
+{n:"Lorenzo Pellegrini",p:"MID",c:"Italy",f:"🇮🇹",cl:"Roma",ic:"🎯",b:83},
+{n:"Giovanni Di Lorenzo",p:"DEF",c:"Italy",f:"🇮🇹",cl:"Napoli",ic:"🛡️",b:83},
+{n:"Gianluca Scamacca",p:"FWD",c:"Italy",f:"🇮🇹",cl:"Atalanta",ic:"💪",b:82},
+{n:"Ademola Lookman",p:"FWD",c:"Nigeria",f:"🇳🇬",cl:"Atalanta",ic:"⚡",b:85},
+{n:"Samuel Chukwueze",p:"FWD",c:"Nigeria",f:"🇳🇬",cl:"AC Milan",ic:"⚡",b:82},
+{n:"Victor Boniface",p:"FWD",c:"Nigeria",f:"🇳🇬",cl:"Leverkusen",ic:"💥",b:84},
+{n:"Mohammed Kudus",p:"MID",c:"Ghana",f:"🇬🇭",cl:"West Ham",ic:"🌟",b:83},
+{n:"Serhou Guirassy",p:"FWD",c:"Guinea",f:"🇬🇳",cl:"Dortmund",ic:"💪",b:84},
+{n:"Moisés Caicedo",p:"MID",c:"Ecuador",f:"🇪🇨",cl:"Chelsea",ic:"💪",b:85},
+{n:"Santiago Giménez",p:"FWD",c:"Mexico",f:"🇲🇽",cl:"Feyenoord",ic:"🐂",b:83},
+{n:"Marco Reus",p:"MID",c:"Germany",f:"🇩🇪",cl:"LAFC",ic:"🌟",b:82},
+{n:"Mats Hummels",p:"DEF",c:"Germany",f:"🇩🇪",cl:"Roma",ic:"🛡️",b:83},
+{n:"Mario Götze",p:"MID",c:"Germany",f:"🇩🇪",cl:"Frankfurt",ic:"🏆",b:80},
+{n:"Ciro Immobile",p:"FWD",c:"Italy",f:"🇮🇹",cl:"Beşiktaş",ic:"🎯",b:83},
+{n:"Andrea Belotti",p:"FWD",c:"Italy",f:"🇮🇹",cl:"Como",ic:"🐂",b:80},
+{n:"Manuel Locatelli",p:"MID",c:"Italy",f:"🇮🇹",cl:"Juventus",ic:"🎯",b:82},
+{n:"Domenico Berardi",p:"FWD",c:"Italy",f:"🇮🇹",cl:"Sassuolo",ic:"⚡",b:83},
+{n:"Jordan Veretout",p:"MID",c:"France",f:"🇫🇷",cl:"Marseille",ic:"🎯",b:80},
+{n:"Cha Bum-kun",p:"FWD",c:"S.Korea",f:"🇰🇷",cl:"Leverkusen (Ret.)",ic:"⚡",b:85},
+{n:"Shunsuke Nakamura",p:"MID",c:"Japan",f:"🇯🇵",cl:"Celtic (Ret.)",ic:"🎯",b:82},
+{n:"Tim Cahill",p:"MID",c:"Australia",f:"🇦🇺",cl:"Everton (Ret.)",ic:"💪",b:79},
+{n:"Claudio Suárez",p:"DEF",c:"Mexico",f:"🇲🇽",cl:"Chivas (Ret.)",ic:"🛡️",b:79},
+{n:"Jorge Campos",p:"GK",c:"Mexico",f:"🇲🇽",cl:"Mexico (Ret.)",ic:"🌈",b:82},
+{n:"Landon Donovan",p:"MID",c:"USA",f:"🇺🇸",cl:"LAFC (Ret.)",ic:"⭐",b:84},
+{n:"Clint Dempsey",p:"FWD",c:"USA",f:"🇺🇸",cl:"Fulham (Ret.)",ic:"🦅",b:82},
+{n:"Takefusa Kubo",p:"FWD",c:"Japan",f:"🇯🇵",cl:"Real Sociedad",ic:"🌸",b:83},
+{n:"Kaoru Mitoma",p:"FWD",c:"Japan",f:"🇯🇵",cl:"Brighton",ic:"🌪️",b:82},
+{n:"Lee Kang-in",p:"MID",c:"S.Korea",f:"🇰🇷",cl:"PSG",ic:"⚡",b:82},
+{n:"Abbosbek Fayzullaev",p:"MID",c:"Uzbekistan",f:"🇺🇿",cl:"Lokomotiv",ic:"⚡",b:79},
+{n:"Arthur Vermeeren",p:"MID",c:"Belgium",f:"🇧🇪",cl:"Leipzig",ic:"🌱",b:80},
+{n:"Charles De Ketelaere",p:"MID",c:"Belgium",f:"🇧🇪",cl:"Atalanta",ic:"🌟",b:83},
+{n:"Amadou Onana",p:"MID",c:"Belgium",f:"🇧🇪",cl:"Aston Villa",ic:"💪",b:82},
+{n:"Luca Sučić",p:"MID",c:"Croatia",f:"🇭🇷",cl:"Leipzig",ic:"🌱",b:79},
+{n:"Brennan Johnson",p:"FWD",c:"Wales",f:"🏴󠁧󠁢󠁷󠁬󠁳󠁿",cl:"Tottenham",ic:"⚡",b:80},
+{n:"Billy Gilmour",p:"MID",c:"Scotland",f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",cl:"Brighton",ic:"🌱",b:78},
+{n:"Piero Hincapié",p:"DEF",c:"Ecuador",f:"🇪🇨",cl:"Leverkusen",ic:"🛡️",b:83},
+{n:"Manuel Ugarte",p:"MID",c:"Uruguay",f:"🇺🇾",cl:"Man Utd",ic:"💪",b:83},
+{n:"Kendry Páez",p:"MID",c:"Ecuador",f:"🇪🇨",cl:"Chelsea",ic:"🌱",b:77},
+/* SILVER (66-75) */
+{n:"Alejandro Balde",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Barcelona",ic:"🏃",b:75},
+{n:"Robert Sánchez",p:"GK",c:"Spain",f:"🇪🇸",cl:"Chelsea",ic:"🧤",b:75},
+{n:"Aaron Ramsdale",p:"GK",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Southampton",ic:"🧤",b:74},
+{n:"Nick Pope",p:"GK",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Newcastle",ic:"🧤",b:75},
+{n:"Harry Maguire",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd",ic:"🛡️",b:73},
+{n:"Luke Shaw",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man Utd",ic:"🏃",b:73},
+{n:"Ben Chilwell",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Chelsea",ic:"🏃",b:74},
+{n:"Lewis Dunk",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Brighton",ic:"🛡️",b:74},
+{n:"Conor Gallagher",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Atlético",ic:"💪",b:74},
+{n:"Kalvin Phillips",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Ipswich",ic:"🛡️",b:73},
+{n:"Callum Wilson",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Newcastle",ic:"💪",b:74},
+{n:"Dominic Calvert-Lewin",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Everton",ic:"🏃",b:73},
+{n:"Tammy Abraham",p:"FWD",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Milan",ic:"🏃",b:73},
+{n:"Brice Samba",p:"GK",c:"France",f:"🇫🇷",cl:"Lens",ic:"🧤",b:74},
+{n:"Alphonse Areola",p:"GK",c:"France",f:"🇫🇷",cl:"West Ham",ic:"🧤",b:73},
+{n:"Leonardo Spinazzola",p:"DEF",c:"Italy",f:"🇮🇹",cl:"Napoli",ic:"🏃",b:74},
+{n:"Francesco Acerbi",p:"DEF",c:"Italy",f:"🇮🇹",cl:"Inter",ic:"🛡️",b:74},
+{n:"Matteo Darmian",p:"DEF",c:"Italy",f:"🇮🇹",cl:"Inter",ic:"🛡️",b:73},
+{n:"Bryan Cristante",p:"MID",c:"Italy",f:"🇮🇹",cl:"Roma",ic:"💪",b:74},
+{n:"Stephan El Shaarawy",p:"FWD",c:"Italy",f:"🇮🇹",cl:"Roma",ic:"⚡",b:74},
+{n:"Joselu",p:"FWD",c:"Spain",f:"🇪🇸",cl:"Real Madrid",ic:"🎯",b:73},
+{n:"Kevin Mirallas",p:"FWD",c:"Belgium",f:"🇧🇪",cl:"Ret.",ic:"⚡",b:71},
+{n:"Bernd Leno",p:"GK",c:"Germany",f:"🇩🇪",cl:"Fulham",ic:"🧤",b:75},
+{n:"Kevin Trapp",p:"GK",c:"Germany",f:"🇩🇪",cl:"Frankfurt",ic:"🧤",b:74},
+{n:"Alexander Nübel",p:"GK",c:"Germany",f:"🇩🇪",cl:"Monaco",ic:"🧤",b:73},
+{n:"David Raum",p:"DEF",c:"Germany",f:"🇩🇪",cl:"Leipzig",ic:"🏃",b:74},
+{n:"Benjamin Henrichs",p:"DEF",c:"Germany",f:"🇩🇪",cl:"Leipzig",ic:"🛡️",b:73},
+{n:"Jonathan Tah",p:"DEF",c:"Germany",f:"🇩🇪",cl:"Leverkusen",ic:"🛡️",b:74},
+{n:"Niklas Süle",p:"DEF",c:"Germany",f:"🇩🇪",cl:"Dortmund",ic:"🛡️",b:74},
+{n:"Emre Can",p:"MID",c:"Germany",f:"🇩🇪",cl:"Dortmund",ic:"💪",b:74},
+{n:"Bryan Mbeumo",p:"FWD",c:"Cameroon",f:"🇨🇲",cl:"Brentford",ic:"⚡",b:75},
+{n:"Yoane Wissa",p:"FWD",c:"DR Congo",f:"🇨🇩",cl:"Brentford",ic:"🏃",b:74},
+{n:"Hannibal Mejbri",p:"MID",c:"Tunisia",f:"🇹🇳",cl:"Burnley",ic:"🌱",b:69},
+{n:"Illan Meslier",p:"GK",c:"France",f:"🇫🇷",cl:"Leeds",ic:"🧤",b:72},
+{n:"Mohammed Kudus",p:"MID",c:"Ghana",f:"🇬🇭",cl:"West Ham",ic:"🌟",b:75},
+{n:"Terem Moffi",p:"FWD",c:"Nigeria",f:"🇳🇬",cl:"Nice",ic:"⚡",b:73},
+{n:"Alex Meret",p:"GK",c:"Italy",f:"🇮🇹",cl:"Napoli",ic:"🧤",b:74},
+{n:"Conor Bradley",p:"DEF",c:"N.Ireland",f:"🇬🇧",cl:"Liverpool",ic:"🏃",b:75},
+{n:"Levi Colwill",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Chelsea",ic:"🛡️",b:75},
+{n:"Nathan Patterson",p:"DEF",c:"Scotland",f:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",cl:"Everton",ic:"🏃",b:72},
+{n:"Neco Williams",p:"DEF",c:"Wales",f:"🏴󠁧󠁢󠁷󠁬󠁳󠁿",cl:"Nottm Forest",ic:"🏃",b:73},
+{n:"Facundo Pellistri",p:"FWD",c:"Uruguay",f:"🇺🇾",cl:"Man Utd",ic:"⚡",b:75},
+{n:"Murillo",p:"DEF",c:"Brazil",f:"🇧🇷",cl:"Nottm Forest",ic:"🛡️",b:75},
+{n:"Lucas Beraldo",p:"DEF",c:"Brazil",f:"🇧🇷",cl:"PSG",ic:"🛡️",b:74},
+{n:"Valentin Barco",p:"DEF",c:"Argentina",f:"🇦🇷",cl:"Brighton",ic:"🏃",b:73},
+{n:"Yukinari Sugawara",p:"DEF",c:"Japan",f:"🇯🇵",cl:"AZ",ic:"🏃",b:73},
+{n:"Oh Hyeon-gyu",p:"FWD",c:"S.Korea",f:"🇰🇷",cl:"Celtic",ic:"⚡",b:72},
+{n:"Yang Hyun-jun",p:"FWD",c:"S.Korea",f:"🇰🇷",cl:"Celtic",ic:"🌱",b:71},
+{n:"Ali Jasim",p:"MID",c:"Iraq",f:"🇮🇶",cl:"Al-Wakrah",ic:"⚡",b:70},
+{n:"Bilal El Khannouss",p:"MID",c:"Morocco",f:"🇲🇦",cl:"Feyenoord",ic:"🌱",b:75},
+{n:"Abde Ezzalzouli",p:"FWD",c:"Morocco",f:"🇲🇦",cl:"Betis",ic:"⚡",b:74},
+{n:"Ismaël Bennacer",p:"MID",c:"Algeria",f:"🇩🇿",cl:"AC Milan",ic:"🎯",b:84},
+{n:"Amine Gouiri",p:"FWD",c:"France",f:"🇫🇷",cl:"Stade Rennais",ic:"🌟",b:74},
+{n:"Johan Bakayoko",p:"FWD",c:"Belgium",f:"🇧🇪",cl:"PSV",ic:"⚡",b:75},
+{n:"Ousmane Diomande",p:"DEF",c:"Côte d'Ivoire",f:"🇨🇮",cl:"Sporting CP",ic:"🛡️",b:75},
+{n:"Odilon Kossounou",p:"DEF",c:"Côte d'Ivoire",f:"🇨🇮",cl:"Leverkusen",ic:"🛡️",b:74},
+{n:"Karim Konaté",p:"FWD",c:"Côte d'Ivoire",f:"🇨🇮",cl:"Red Bull Salzburg",ic:"⚡",b:72},
+{n:"Emre Can",p:"MID",c:"Germany",f:"🇩🇪",cl:"Dortmund",ic:"💪",b:74},
+{n:"Alex Meret",p:"GK",c:"Italy",f:"🇮🇹",cl:"Napoli",ic:"🧤",b:74},
+/* BRONZE (56-65) */
+{n:"Mathys Tel",p:"FWD",c:"France",f:"🇫🇷",cl:"Bayern",ic:"🌱",b:65},
+{n:"Youssoufa Moukoko",p:"FWD",c:"Germany",f:"🇩🇪",cl:"Nice",ic:"🌱",b:64},
+{n:"Giorgio Scalvini",p:"DEF",c:"Italy",f:"🇮🇹",cl:"Atalanta",ic:"🛡️",b:65},
+{n:"Destiny Udogie",p:"DEF",c:"Italy",f:"🇮🇹",cl:"Tottenham",ic:"🏃",b:65},
+{n:"Tommaso Baldanzi",p:"MID",c:"Italy",f:"🇮🇹",cl:"Roma",ic:"🌱",b:64},
+{n:"Fabio Miretti",p:"MID",c:"Italy",f:"🇮🇹",cl:"Juventus",ic:"🌱",b:62},
+{n:"Rayan Cherki",p:"MID",c:"France",f:"🇫🇷",cl:"Dortmund",ic:"✨",b:65},
+{n:"Elye Wahi",p:"FWD",c:"France",f:"🇫🇷",cl:"Marseille",ic:"⚡",b:64},
+{n:"Malo Gusto",p:"DEF",c:"France",f:"🇫🇷",cl:"Chelsea",ic:"🏃",b:65},
+{n:"Castello Lukeba",p:"DEF",c:"France",f:"🇫🇷",cl:"Leipzig",ic:"🛡️",b:64},
+{n:"Romeo Lavia",p:"MID",c:"Belgium",f:"🇧🇪",cl:"Chelsea",ic:"🌱",b:65},
+{n:"Rico Lewis",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Man City",ic:"🌱",b:64},
+{n:"Oscar Bobb",p:"MID",c:"Norway",f:"🇳🇴",cl:"Man City",ic:"🌱",b:63},
+{n:"Harvey Elliott",p:"MID",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Liverpool",ic:"🌱",b:65},
+{n:"Stefan Bajcetic",p:"MID",c:"Spain",f:"🇪🇸",cl:"Liverpool",ic:"🌱",b:62},
+{n:"Jarell Quansah",p:"DEF",c:"England",f:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",cl:"Liverpool",ic:"🌱",b:63},
+{n:"Evan Ferguson",p:"FWD",c:"Ireland",f:"🇮🇪",cl:"Brighton",ic:"🌱",b:65},
+{n:"Gianluca Prestianni",p:"FWD",c:"Argentina",f:"🇦🇷",cl:"Benfica",ic:"🌱",b:63},
+{n:"Estêvão Willian",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Chelsea",ic:"✨",b:65},
+{n:"Luis Guilherme",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"West Ham",ic:"🌱",b:64},
+{n:"Marcos Leonardo",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Villarreal",ic:"🏃",b:62},
+{n:"Claudio Echeverri",p:"MID",c:"Argentina",f:"🇦🇷",cl:"River Plate",ic:"🌱",b:63},
+{n:"Keito Nakamura",p:"MID",c:"Japan",f:"🇯🇵",cl:"Reims",ic:"🌸",b:63},
+{n:"Abbosbek Fayzullaev",p:"MID",c:"Uzbekistan",f:"🇺🇿",cl:"Lokomotiv",ic:"⚡",b:62},
+{n:"Weston McKennie",p:"MID",c:"USA",f:"🇺🇸",cl:"Juventus",ic:"🌟",b:64},
+{n:"Timothy Weah",p:"FWD",c:"USA",f:"🇺🇸",cl:"Juventus",ic:"🏃",b:64},
+{n:"Yunus Musah",p:"MID",c:"USA",f:"🇺🇸",cl:"AC Milan",ic:"⚡",b:65},
+{n:"Vitor Roque",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Betis",ic:"🌱",b:65},
+{n:"Luka Sučić",p:"MID",c:"Croatia",f:"🇭🇷",cl:"Leipzig",ic:"🌱",b:63},
+{n:"Kenan Yıldız",p:"MID",c:"Turkey",f:"🇹🇷",cl:"Juventus",ic:"🌟",b:65},
+{n:"Yeremy Pino",p:"FWD",c:"Spain",f:"🇪🇸",cl:"Villarreal",ic:"⚡",b:64},
+{n:"Arnau Martínez",p:"DEF",c:"Spain",f:"🇪🇸",cl:"Girona",ic:"🏃",b:63},
+{n:"Ernest Nuamah",p:"FWD",c:"Ghana",f:"🇬🇭",cl:"Lyon",ic:"⚡",b:64},
+{n:"Portu",p:"FWD",c:"Spain",f:"🇪🇸",cl:"Getafe",ic:"⚡",b:63},
+{n:"Jeremie Frimpong",p:"DEF",c:"Netherlands",f:"🇳🇱",cl:"Leverkusen",ic:"🏃",b:65},
+{n:"Joao Cancelo",p:"DEF",c:"Portugal",f:"🇵🇹",cl:"Barcelona",ic:"🏃",b:64},
+{n:"Neco Williams",p:"DEF",c:"Wales",f:"🏴󠁧󠁢󠁷󠁬󠁳󠁿",cl:"Nottm Forest",ic:"🏃",b:62},
+{n:"Antony",p:"FWD",c:"Brazil",f:"🇧🇷",cl:"Man Utd",ic:"⚡",b:63},
+{n:"Hannibal Mejbri",p:"MID",c:"Tunisia",f:"🇹🇳",cl:"Burnley",ic:"🌱",b:61},
+{n:"Illan Meslier",p:"GK",c:"France",f:"🇫🇷",cl:"Leeds",ic:"🧤",b:63},
+];
+
+// ===========================================================
+// PACK DEFINITIONS — each pack has exclusive player pool
+// ===========================================================
+// Helper: filter PDB by baseOvr range
+function pdbRange(min,max){return PDB.filter(p=>p.b>=min&&p.b<=max);}
+// Big stars per pack = highest OVR in that pool
+function getBigStar(pool){if(!pool.length)return null;return pool.reduce((a,b)=>b.b>a.b?b:a);}
+
+// Pity system: after N spins without elite/legend, guarantee one
+// Stored per pack ID in G.pity[packId] = {count, lastElite}
+const PACKS=[
+  // STANDARD
+  {id:"normal",nm:"Normal Pack",desc:"Entry level. Common & uncommon players.",ic:"📦",cat:"std",tok:"normal",cost:1,
+   poolRange:[56,75],rateMap:{bronze:.54,silver:.34,gold:.11,special:.010,elite:.00067,legend:.00040},
+   pityElite:150,pityLegend:300,style:"pk-normal",evt:null},
+  {id:"silver_p",nm:"Silver Pack",desc:"More silver & gold. Better floor.",ic:"🥈",cat:"std",tok:"normal",cost:2,
+   poolRange:[66,85],rateMap:{bronze:.28,silver:.42,gold:.24,special:.048,elite:.00067,legend:.00040},
+   pityElite:120,pityLegend:250,style:"pk-silver-t",evt:null},
+  {id:"golden_p",nm:"Golden Pack",desc:"Guaranteed gold+. Solid picks.",ic:"🏅",cat:"std",tok:"golden",cost:1,
+   poolRange:[76,96],rateMap:{bronze:.03,silver:.18,gold:.48,special:.27,elite:.00067,legend:.00040},
+   pityElite:80,pityLegend:180,style:"pk-golden",evt:null},
+  // EVENT PACKS
+  {id:"halloween",nm:"Halloween Pack 🎃",desc:"Dark cursed powers! OVR boosted in shadow.",ic:"🎃",cat:"evt",tok:"silver",cost:3,
+   poolRange:[66,96],rateMap:{bronze:.10,silver:.28,gold:.36,special:.22,elite:.00067,legend:.00040},
+   pityElite:80,pityLegend:180,style:"pk-halloween",evt:"halloween"},
+  {id:"christmas",nm:"Christmas Pack 🎄",desc:"Winter magic. White snow & red card theme!",ic:"🎄",cat:"evt",tok:"silver",cost:3,
+   poolRange:[76,96],rateMap:{bronze:.08,silver:.24,gold:.38,special:.26,elite:.00067,legend:.00040},
+   pityElite:75,pityLegend:160,style:"pk-christmas",evt:"christmas"},
+  {id:"newyear",nm:"New Year Pack 🎆",desc:"Firework boom! Galaxy star theme.",ic:"🎆",cat:"evt",tok:"silver",cost:2,
+   poolRange:[66,92],rateMap:{bronze:.12,silver:.32,gold:.36,special:.17,elite:.00067,legend:.00040},
+   pityElite:90,pityLegend:200,style:"pk-newyear",evt:"newyear"},
+  {id:"valentines",nm:"Valentine's Pack 💝",desc:"Love-themed. Rose pink & crimson vibes.",ic:"💝",cat:"evt",tok:"silver",cost:2,
+   poolRange:[66,92],rateMap:{bronze:.14,silver:.34,gold:.34,special:.15,elite:.00067,legend:.00040},
+   pityElite:100,pityLegend:220,style:"pk-valentines",evt:"valentines"},
+  {id:"summer",nm:"Summer Heat Pack ☀️",desc:"Beach gold & blazing amber. Pure speed.",ic:"☀️",cat:"evt",tok:"silver",cost:3,
+   poolRange:[76,96],rateMap:{bronze:.07,silver:.24,gold:.40,special:.25,elite:.00067,legend:.00040},
+   pityElite:80,pityLegend:175,style:"pk-summer",evt:"summer"},
+  {id:"elclasico",nm:"El Clásico Pack ⚔️",desc:"Real Madrid vs Barça. Their finest cards.",ic:"⚔️",cat:"evt",tok:"golden",cost:2,
+   poolRange:[86,107],rateMap:{bronze:0,silver:.10,gold:.36,special:.48,elite:.00067,legend:.00040},
+   pityElite:60,pityLegend:140,style:"pk-elclasico",evt:null},
+  {id:"euro",nm:"EURO Championship 🇪🇺",desc:"Continental kings. Blue & gold glory.",ic:"🇪🇺",cat:"evt",tok:"golden",cost:2,
+   poolRange:[86,107],rateMap:{bronze:0,silver:.08,gold:.34,special:.52,elite:.00067,legend:.00040},
+   pityElite:55,pityLegend:130,style:"pk-euro",evt:"euro"},
+  {id:"worldcup",nm:"World Cup Final 🏆",desc:"Global heroes. Top national team stars.",ic:"🏆",cat:"evt",tok:"golden",cost:3,
+   poolRange:[86,107],rateMap:{bronze:0,silver:.06,gold:.28,special:.54,elite:.00067,legend:.00040},
+   pityElite:50,pityLegend:120,style:"pk-worldcup",evt:null},
+  {id:"rising",nm:"Rising Stars 🌱",desc:"Next-gen U-24 talents. Future legends.",ic:"🌱",cat:"evt",tok:"silver",cost:2,
+   poolRange:[56,82],rateMap:{bronze:.04,silver:.38,gold:.44,special:.12,elite:.00067,legend:.00040},
+   pityElite:120,pityLegend:260,style:"pk-worldcup",evt:null},
+  // PREMIUM
+  {id:"ucl",nm:"UCL Nights ⭐",desc:"Champions League elite. Club champions.",ic:"⭐",cat:"prm",tok:"golden",cost:3,
+   poolRange:[90,107],rateMap:{bronze:0,silver:.05,gold:.24,special:.59,elite:.00067,legend:.00040},
+   pityElite:45,pityLegend:110,style:"pk-golden",evt:null},
+  {id:"goldenage",nm:"Golden Age 🏆",desc:"Football's greatest era. Icons.",ic:"🏆",cat:"prm",tok:"elite",cost:1,
+   poolRange:[97,112],rateMap:{bronze:0,silver:.02,gold:.14,special:.46,elite:.00067,legend:.00040},
+   pityElite:40,pityLegend:90,style:"pk-goldenage",evt:null},
+  {id:"totc",nm:"TOTC — Century Pack 🐐",desc:"Team of the Century. Dark gold theme.",ic:"🐐",cat:"prm",tok:"elite",cost:2,
+   poolRange:[100,120],rateMap:{bronze:0,silver:0,gold:.08,special:.40,elite:.00067,legend:.00040},
+   pityElite:35,pityLegend:75,style:"pk-totc",evt:"totc"},
+  {id:"toty",nm:"TOTY — Year Pack 🏅",desc:"Best XI of the year. Peak OVR.",ic:"🏅",cat:"prm",tok:"elite",cost:2,
+   poolRange:[97,112],rateMap:{bronze:0,silver:0,gold:.12,special:.46,elite:.00067,legend:.00040},
+   pityElite:35,pityLegend:80,style:"pk-elite",evt:null},
+  {id:"fut",nm:"FUT Champions 🔥",desc:"Competitive-grade. Highest floor guaranteed.",ic:"🔥",cat:"prm",tok:"elite",cost:3,
+   poolRange:[100,112],rateMap:{bronze:0,silver:0,gold:.05,special:.43,elite:.00067,legend:.00040},
+   pityElite:30,pityLegend:70,style:"pk-elite",evt:null},
+  {id:"ballon",nm:"Ballon d'Or Pack 🥇",desc:"World football's finest. Absolute top.",ic:"🥇",cat:"prm",tok:"legend",cost:1,
+   poolRange:[107,120],rateMap:{bronze:0,silver:0,gold:.02,special:.24,elite:.00067,legend:.00040},
+   pityElite:25,pityLegend:55,style:"pk-ballon",evt:null},
+  {id:"icon",nm:"Icon Edition 👑",desc:"Retired legends only. Find the GOATs.",ic:"👑",cat:"prm",tok:"legend",cost:2,
+   poolRange:[108,120],rateMap:{bronze:0,silver:0,gold:0,special:.15,elite:.00067,legend:.00040},
+   pityElite:20,pityLegend:45,style:"pk-legend",evt:null},
+];
+
+// ===========================================================
+// MILESTONES — max OVR 1000
+// ===========================================================
+const MILESTONES=[
+  {ovr:50,rw:{normal:2},lbl:"First Kicks"},
+  {ovr:100,rw:{normal:2},lbl:"Getting Started"},
+  {ovr:150,rw:{normal:2,silver:1},lbl:"Bronze Builder"},
+  {ovr:200,rw:{silver:2},lbl:"Silver Grade"},
+  {ovr:250,rw:{silver:1,golden:1},lbl:"Gold Seeker"},
+  {ovr:300,rw:{golden:2},lbl:"Gold Class"},
+  {ovr:380,rw:{golden:1,elite:1},lbl:"Special Agent"},
+  {ovr:460,rw:{golden:1,elite:1},lbl:"Elite Prospect"},
+  {ovr:550,rw:{elite:2},lbl:"World Class"},
+  {ovr:640,rw:{elite:1,legend:1},lbl:"UCL Caliber"},
+  {ovr:720,rw:{elite:1,legend:1},lbl:"Champions Grade"},
+  {ovr:800,rw:{legend:2},lbl:"Ballon d'Or Mgr"},
+  {ovr:900,rw:{legend:2,elite:1},lbl:"Century Builder"},
+  {ovr:1000,rw:{legend:3},lbl:"🐐 PERFECT SQUAD"},
+];
+
+// SHOP TOKEN PRICES
+const TOKSHOP=[
+  {tok:"normal",amt:5,price:3500,ic:"🔵"},
+  {tok:"normal",amt:15,price:9000,ic:"🔵"},
+  {tok:"silver",amt:3,price:18000,ic:"⚪"},
+  {tok:"silver",amt:8,price:42000,ic:"⚪"},
+  {tok:"golden",amt:2,price:75000,ic:"🟡"},
+  {tok:"golden",amt:5,price:170000,ic:"🟡"},
+  {tok:"elite",amt:1,price:380000,ic:"🟣"},
+  {tok:"elite",amt:3,price:1000000,ic:"🟣"},
+  {tok:"legend",amt:1,price:2500000,ic:"🔴"},
+  {tok:"legend",amt:2,price:4500000,ic:"🔴"},
+];
+
+// Upgrade amounts (small increments per type)
+const UPG={bronze:1,silver:2,gold:3,elite:5,legend:8};
+const UPGCOL={bronze:'#C87941',silver:'#BDC3C7',gold:'#E8B84B',elite:'#C39BD3',legend:'#FF9D9D'};
+
+// OVR range per tier
+const TRANGE={bronze:[56,65],silver:[66,75],gold:[76,85],special:[86,96],elite:[97,107],legend:[108,120]};
+
+// CS chance per tier (probability of getting cutscene)
+const CS_CHANCE={bronze:.04,silver:.10,gold:.25,special:.55,elite:.90,legend:1.0};
+
+// ===========================================================
+// GAME STATE
+// ===========================================================
+const DS={tokens:{normal:10,silver:0,golden:0,elite:0,legend:0},upgradeTokens:{bronze:0,silver:0,gold:0,elite:0,legend:0},coins:0,collection:[],squad:[],claimedMilestones:[],pity:{},stats:{packs:0}};
+let G=loadG();
+function loadG(){try{const s=JSON.parse(localStorage.getItem('fpc_v5')||'null');if(s&&s.tokens)return s;}catch(e){}return JSON.parse(JSON.stringify(DS));}
+function saveG(){try{localStorage.setItem('fpc_v5',JSON.stringify(G));}catch(e){}}
+
+// OVR (max 1000)
+function calcOvr(){
+  if(!G.squad.length)return 0;
+  const ovrs=G.squad.map(i=>G.collection[i]?.currentOvr||0);
+  const s=[...ovrs].sort((a,b)=>b-a);
+  const top11=s.slice(0,Math.min(11,s.length));
+  const rest=s.slice(11);
+  const sum=top11.reduce((a,b)=>a+b,0)*1.2+rest.reduce((a,b)=>a+b,0)*0.8;
+  const cnt=top11.length*1.2+rest.length*0.8;
+  return Math.min(1000,Math.round(sum/cnt*G.squad.length/Math.max(1,G.squad.length)));
+}
+function updateUI(){
+  const ovr=calcOvr();
+  const el=document.getElementById('ovr-n');
+  el.textContent=ovr.toLocaleString();
+  el.style.color=ovr>=800?'#FF9D9D':ovr>=600?'#C39BD3':ovr>=400?'#E8B84B':ovr>=200?'#BDC3C7':'#C87941';
+  const nx=MILESTONES.find(m=>ovr<m.ovr);const pv=[...MILESTONES].reverse().find(m=>ovr>=m.ovr);
+  if(nx){
+    const pct=Math.min(100,((ovr-(pv?pv.ovr:0))/(nx.ovr-(pv?pv.ovr:0)))*100);
+    document.getElementById('ovr-bf').style.width=pct+'%';
+    document.getElementById('ovr-bf').style.background=`linear-gradient(90deg,#C8922A,#F5D080)`;
+    document.getElementById('ms-nxt').textContent=`Next OVR ${nx.ovr}: `+Object.entries(nx.rw).map(([k,v])=>'+'+v+' '+k).join(', ');
+  } else {
+    document.getElementById('ovr-bf').style.width='100%';
+    document.getElementById('ms-nxt').textContent='🐐 ALL MILESTONES DONE!';
+  }
+  document.getElementById('sq-cnt').textContent=G.squad.length;
+  document.getElementById('cl-cnt').textContent=G.collection.length;
+  document.getElementById('coins-disp').textContent=G.coins.toLocaleString()+' coins';
+  const icons={normal:'🔵',silver:'⚪',golden:'🟡',elite:'🟣',legend:'🔴'};
+  document.getElementById('tkn-bar').innerHTML=Object.entries(G.tokens).map(([k,v])=>
+    `<div class="tb ${k}">${icons[k]} ${v} <span style="opacity:.6;font-size:.8em">${k}</span></div>`).join('');
+  checkMS(ovr);
+}
+function checkMS(ovr){
+  MILESTONES.forEach(ms=>{
+    if(ovr>=ms.ovr&&!G.claimedMilestones.includes(ms.ovr)){
+      G.claimedMilestones.push(ms.ovr);
+      Object.entries(ms.rw).forEach(([t,v])=>{G.tokens[t]=(G.tokens[t]||0)+v;});
+      ntf('🏆 MILESTONE OVR '+ms.ovr+'! '+ms.lbl+' — '+Object.entries(ms.rw).map(([k,v])=>'+'+v+' '+k).join(', '),'sp');
+      saveG();updateUI();
+    }
+  });
+}
+
+// Card styling
+function getTier(ovr){
+  if(ovr>=108)return 'legend';if(ovr>=97)return 'elite';if(ovr>=86)return 'special';
+  if(ovr>=76)return 'gold';if(ovr>=66)return 'silver';return 'bronze';
+}
+function cStyle(tier,evt){
+  const em={halloween:'c-halloween',christmas:'c-christmas',totc:'c-totc',newyear:'c-newyear',summer:'c-summer',valentines:'c-valentines',euro:'c-euro'};
+  return (evt&&em[evt])||'c-'+tier;
+}
+function tColor(tier,evt){
+  const em={halloween:'#FF8800',christmas:'#CC0000',totc:'#FFD700',newyear:'#AAAAFF',summer:'#FF9900',valentines:'#FF2266',euro:'#4477FF'};
+  const tm={bronze:'#C87941',silver:'#BDC3C7',gold:'#E8B84B',special:'#5BA3D9',elite:'#C39BD3',legend:'#FF9D9D'};
+  return (evt&&em[evt])||tm[tier]||'#BDC3C7';
+}
+function pPrice(ovr){
+  if(ovr>=108)return Math.round((ovr-107)*90000+500000);
+  if(ovr>=97)return Math.round((ovr-96)*35000+200000);
+  if(ovr>=86)return Math.round((ovr-85)*18000+50000);
+  if(ovr>=76)return Math.round((ovr-75)*6000+5000);
+  if(ovr>=66)return Math.round((ovr-65)*1800+1200);
+  return Math.round((ovr-55)*400+400);
+}
+
+// ROLL
+function rollTier(rateMap){
+  const r=Math.random();let cum=0;
+  for(const[t,p]of Object.entries(rateMap)){cum+=p;if(r<cum)return t;}
+  return Object.keys(rateMap).find(k=>rateMap[k]>0)||'bronze';
+}
+function pickFromPool(tier,pool,used){
+  const[mn,mx]=TRANGE[tier]||[56,65];
+  let pl=pool.filter(p=>p.b>=mn&&p.b<=mx&&!used.includes(p.n));
+  if(!pl.length)pl=pool.filter(p=>!used.includes(p.n));
+  if(!pl.length)pl=[...pool];
+  return pl[Math.floor(Math.random()*pl.length)];
+}
+function rollOvr(player,tier){
+  const[mn,mx]=TRANGE[tier]||[56,65];
+  const base=Math.max(mn,Math.min(mx,player.b));
+  const spread=mx-mn;
+  return Math.max(mn,Math.min(mx,base+Math.floor((Math.random()-.5)*spread*.4)));
+}
+function isDup(name){return G.collection.some(c=>c.name===name);}
+function convDup(tier){const t={bronze:'bronze',silver:'bronze',gold:'silver',special:'gold',elite:'elite',legend:'legend'}[tier]||'bronze';G.upgradeTokens[t]=(G.upgradeTokens[t]||0)+1;ntf('♻️ Duplicate! +1 '+t+' upgrade token','wn');}
+
+// PITY SYSTEM
+function getPity(packId){if(!G.pity[packId])G.pity[packId]={eliteCount:0,legendCount:0};return G.pity[packId];}
+function checkAndApplyPity(pack,tier){
+  const pt=getPity(pack.id);
+  if(tier==='legend'){pt.legendCount=0;pt.eliteCount=0;return tier;}
+  if(tier==='elite'){pt.eliteCount=0;return tier;}
+  pt.eliteCount++;pt.legendCount++;
+  if(pt.legendCount>=pack.pityLegend){pt.legendCount=0;pt.eliteCount=0;return 'legend';}
+  if(pt.eliteCount>=pack.pityElite){pt.eliteCount=0;return 'elite';}
+  return tier;
+}
+
+// OPEN PACK
+function openPack(packId){
+  const pack=PACKS.find(p=>p.id===packId);if(!pack)return;
+  if((G.tokens[pack.tok]||0)<pack.cost){ntf('❌ Need '+pack.cost+'x '+pack.tok+' token!','er');return;}
+  G.tokens[pack.tok]-=pack.cost;G.stats.packs++;
+  // Upgrade token drop ~6%
+  let upTok=null;
+  if(Math.random()<0.06){const ut=['bronze','silver','gold','elite','legend'],uw=[.55,.27,.13,.04,.01];let r=Math.random(),cu=0;for(let i=0;i<ut.length;i++){cu+=uw[i];if(r<cu){upTok=ut[i];break;}}if(upTok)G.upgradeTokens[upTok]=(G.upgradeTokens[upTok]||0)+1;}
+  // Get pool for this pack
+  const pool=PDB.filter(p=>p.b>=pack.poolRange[0]&&p.b<=pack.poolRange[1]);
+  const cards=[];const used=[];
+  for(let i=0;i<5;i++){
+    let tier=rollTier(pack.rateMap);
+    tier=checkAndApplyPity(pack,tier);
+    const pl=pickFromPool(tier,pool.length>0?pool:PDB,used);
+    used.push(pl.n);
+    const ovr=rollOvr(pl,tier);
+    cards.push({name:pl.n,pos:pl.p,country:pl.c,flag:pl.f,club:pl.cl,icon:pl.ic,baseOvr:pl.b,currentOvr:ovr,tier,evt:pack.evt||null,dup:isDup(pl.n),price:pPrice(ovr),addedAt:Date.now()});
+    if(tier==='legend')G.stats.legendCount=(G.stats.legendCount||0)+1;
+  }
+  saveG();updateUI();
+  showReveal(pack,cards,upTok);
+}
+
+// ===========================================================
+// CUTSCENE ENGINE
+// ===========================================================
+const CS_PHASES=['cs-phase-badge','cs-phase-country','cs-phase-pos','cs-phase-club','cs-phase-pic','cs-phase-name','cs-phase-ovr','cs-phase-btn'];
+const CS_TIMES=[0,1400,2700,3900,5300,6500,7400,8400];
+let csCallback=null,csTimers=[];
+
+function triggerCS(card,onDone){
+  csCallback=onDone;
+  const overlay=document.getElementById('cs');
+  const bg=document.getElementById('cs-bg');
+  const tc=tColor(card.tier,card.evt);
+  // BG per event/tier
+  const bgs={legend:'radial-gradient(ellipse at center,#3A0000 0%,#1A0000 50%,#000 100%)',elite:'radial-gradient(ellipse at center,#1A003A 0%,#0A0020 50%,#000 100%)',halloween:'radial-gradient(ellipse at center,#2A1000 0%,#150815 50%,#000 100%)',christmas:'radial-gradient(ellipse at center,#0A1800 0%,#180505 50%,#050505 100%)',totc:'radial-gradient(ellipse at center,#1A1400 0%,#0A0A1A 50%,#000 100%)',newyear:'radial-gradient(ellipse at center,#030314 0%,#070718 50%,#000 100%)',summer:'radial-gradient(ellipse at center,#281200 0%,#001020 50%,#000 100%)',valentines:'radial-gradient(ellipse at center,#1A0508 0%,#0A000F 50%,#000 100%)',euro:'radial-gradient(ellipse at center,#00051A 0%,#05000F 50%,#000 100%)',default:'radial-gradient(ellipse at center,#1A0A2A 0%,#0A0515 50%,#000 100%)'};
+  const bgK=card.evt||(card.tier==='legend'?'legend':card.tier==='elite'?'elite':'default');
+  bg.style.background=bgs[bgK]||bgs.default;
+  // Remove all glow classes
+  overlay.className='';overlay.classList.add('on');
+  const gc={legend:'glow-legend',elite:'glow-elite',halloween:'glow-halloween',christmas:'glow-christmas',totc:'glow-totc'};
+  if(gc[bgK])overlay.classList.add(gc[bgK]);
+  // Particles
+  const pt=document.getElementById('cs-pt');pt.innerHTML='';
+  const pcs={legend:['#FF9D9D','#FF5555','#FFD700'],elite:['#C39BD3','#8E44AD','#E8B84B'],halloween:['#FF6600','#FF9900','#AA00AA'],christmas:['#FF0000','#00FF00','#FFFFFF'],totc:['#FFD700','#DAA520','#FFF8AA'],newyear:['#7777FF','#AAAAFF','#FFFF77','#FFF'],summer:['#FF9900','#FFEE44','#00BBFF'],valentines:['#FF3377','#FF66AA','#FFBBDD'],euro:['#0044BB','#77AAFF','#FFD700'],default:['#5BA3D9','#E8B84B','#FFF']};
+  const pcol=pcs[bgK]||pcs.default;const pn=card.tier==='legend'?45:card.tier==='elite'?30:18;
+  for(let i=0;i<pn;i++){const p=document.createElement('div');p.className='csp';p.style.cssText=`left:${Math.random()*100}%;width:${3+Math.random()*7}px;height:${3+Math.random()*7}px;background:${pcol[Math.floor(Math.random()*pcol.length)]};animation-delay:${Math.random()*2.5}s;animation-duration:${2+Math.random()*2}s;`;pt.appendChild(p);}
+  // Decorations
+  const decos=document.getElementById('cs-decos');decos.innerHTML='';
+  const dm={halloween:[['🎃',8,12],['🕷️',82,18],['🦇',45,5],['💀',65,78],['🕸️',15,80],['🎃',90,65]],christmas:[['⛄',8,82],['🎄',85,12],['❄️',22,18],['🎁',68,82],['⭐',48,6],['🦌',12,52]],newyear:[['🎆',12,85],['🎇',85,80],['✨',32,12],['🥂',68,22],['🎊',48,90],['🎉',88,52]],valentines:[['💝',12,82],['💕',82,18],['🌹',22,52],['💌',72,72],['❤️',48,12],['💋',85,88]],summer:[['🌊',12,88],['🏖️',82,82],['☀️',48,6],['🌴',18,22],['🏄',75,28],['🍹',88,62]],totc:[['🏆',12,88],['👑',85,12],['⭐',32,52],['🌟',72,52],['🥇',48,88],['🎖️',88,32]],};
+  if(dm[card.evt||'']){dm[card.evt||''].forEach(([em,lp,tp])=>{const d=document.createElement('div');d.className='csd';d.textContent=em;d.style.cssText=`left:${lp}%;top:${tp}%;font-size:${1.5+Math.random()*1.5}em;animation-delay:${Math.random()*2}s;animation-duration:${3+Math.random()*2}s;opacity:.55;`;decos.appendChild(d);});}
+  // Reset all phases
+  CS_PHASES.forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('vis');});
+  // Badge
+  const bdgM={legend:'⚠️ LEGENDARY CARD ⚠️',elite:'★ ELITE CARD ★',halloween:'🎃 HALLOWEEN CURSED 🎃',christmas:'🎄 CHRISTMAS SPECIAL 🎄',totc:'🐐 TEAM OF THE CENTURY 🐐',newyear:'🎆 NEW YEAR SPECIAL 🎆',summer:'☀️ SUMMER HEAT CARD ☀️',valentines:'💝 VALENTINE SPECIAL 💝',euro:'🇪🇺 EURO SPECIAL 🇪🇺',special:'✦ SPECIAL CARD ✦',gold:'⭐ GOLD CARD ⭐',silver:'↑ SILVER CARD',bronze:'→ CARD'};
+  const bdgK=card.evt||card.tier;
+  document.getElementById('cs-badge').textContent=bdgM[bdgK]||bdgM.special;
+  document.getElementById('cs-badge').style.cssText=`color:${tc};text-shadow:0 0 14px ${tc}88;background:${tc}18;border:1px solid ${tc}44;`;
+  document.getElementById('cs-country-flag').textContent=card.flag;
+  document.getElementById('cs-country-flag').style.fontSize='2.2em';
+  document.getElementById('cs-country-name').textContent=card.country.toUpperCase();
+  document.getElementById('cs-country-name').style.cssText=`color:${tc};font-family:'Bebas Neue',sans-serif;font-size:1.5em;letter-spacing:3px;`;
+  document.getElementById('cs-pos-box').textContent=card.pos;
+  document.getElementById('cs-pos-box').style.cssText=`background:${tc}22;color:${tc};border:2px solid ${tc}88;font-family:'Bebas Neue',sans-serif;font-size:1.1em;letter-spacing:3px;padding:5px 20px;border-radius:14px;display:inline-block;`;
+  document.getElementById('cs-club-icon').textContent='🏟️';document.getElementById('cs-club-icon').style.fontSize='1.7em';
+  document.getElementById('cs-club-name').textContent=card.club.toUpperCase();
+  document.getElementById('cs-club-name').style.cssText=`color:rgba(255,255,255,.82);font-family:'Bebas Neue',sans-serif;font-size:1em;letter-spacing:2px;`;
+  document.getElementById('cs-pic').textContent=card.icon;document.getElementById('cs-pic').style.cssText=`font-size:5.5em;text-shadow:0 0 28px ${tc}88;`;
+  document.getElementById('cs-name').textContent=card.name;document.getElementById('cs-name').style.cssText=`color:${tc};font-family:'Orbitron',sans-serif;font-size:1.65em;font-weight:900;text-shadow:0 0 18px ${tc}66;`;
+  document.getElementById('cs-ovr').textContent=card.currentOvr;document.getElementById('cs-ovr').style.cssText=`color:${tc};font-family:'Orbitron',sans-serif;font-size:3em;font-weight:900;text-shadow:0 0 22px ${tc};`;
+  const btn=document.getElementById('cs-btn');btn.style.cssText=`background:${tc};color:#1A0806;font-family:'Nunito',sans-serif;font-weight:900;font-size:.9em;`;
+  // Animate phases sequentially
+  csTimers.forEach(t=>clearTimeout(t));csTimers=[];
+  CS_PHASES.forEach((id,i)=>{const t=setTimeout(()=>{const e=document.getElementById(id);if(e)e.classList.add('vis');},CS_TIMES[i]);csTimers.push(t);});
+}
+function endCS(){
+  csTimers.forEach(t=>clearTimeout(t));csTimers=[];
+  document.getElementById('cs').className='';// removes 'on'
+  CS_PHASES.forEach(id=>{const e=document.getElementById(id);if(e)e.classList.remove('vis');});
+  if(typeof csCallback==='function'){const cb=csCallback;csCallback=null;cb();}
+}
+
+// ===========================================================
+// REVEAL SYSTEM — FIXED: one CS queue, then show cards, then pick
+// ===========================================================
+window._pCards=[];window._picks=[];
+
+function showReveal(pack,cards,upTok){
+  window._pCards=cards;window._picks=[];
+  document.getElementById('mc').innerHTML=`
+    <h2>${pack.ic} ${pack.nm.toUpperCase()}</h2>
+    ${upTok?`<div style="text-align:center;margin-bottom:9px;background:rgba(232,184,75,.1);border:1px solid #E8B84B44;border-radius:7px;padding:7px;font-weight:700;color:#E8B84B;font-size:.8em">🎁 +1 ${upTok.toUpperCase()} Upgrade Token dropped!</div>`:''}
+    <div class="rev-grid" id="rev-row"></div>
+    <div id="pick-sec" style="display:none;margin-top:10px;text-align:center">
+      <p style="color:var(--cr3);font-size:.82em;margin-bottom:6px">Choose <strong style="color:#E8B84B">2 cards</strong> to keep. Duplicates auto → upgrade tokens.</p>
+      <div class="pick-wrap" id="pick-w"></div>
+      <button class="conf-btn" id="conf-btn" onclick="doPick()">✅ Confirm 2 Picks</button>
+    </div>`;
+  document.getElementById('modal').style.display='flex';
+  // Build CS queue for cards that need it (probability-based per tier)
+  const csQueue=cards.filter(c=>{
+    if(c.dup)return false;
+    const chance=CS_CHANCE[c.tier]||0;
+    // Event cards always get CS if they'd normally qualify, or bump up chance a bit
+    const bonus=c.evt?.0.15:0;
+    return Math.random()<(chance+bonus);
+  });
+  let qi=0;
+  function runQ(){
+    if(qi<csQueue.length){triggerCS(csQueue[qi],()=>{qi++;runQ()});}
+    else{doRevealCards(cards);}
+  }
+  if(csQueue.length>0){setTimeout(()=>runQ(),300);}
+  else{doRevealCards(cards);}
+}
+
+function doRevealCards(cards){
+  const row=document.getElementById('rev-row');if(!row)return;
+  let d=0;
+  cards.forEach((c,i)=>{
+    setTimeout(()=>{
+      const tc=tColor(c.tier,c.evt);
+      const div=document.createElement('div');
+      div.className=`rev-c${c.dup?' dup':''}`;
+      div.style.borderColor=c.dup?'#E74C3C':tc;
+      div.innerHTML=`<div class="rv-c">${c.flag} ${c.country}</div>
+        <div class="rv-p" style="background:${tc}22;color:${tc};border:1px solid ${tc}">${c.pos}</div>
+        <div class="rv-i">${c.icon}</div>
+        <div class="rv-n">${c.name}</div>
+        <div style="font-size:.57em;color:rgba(255,255,255,.5);margin-bottom:2px">${c.club}</div>
+        <div class="rv-o" style="color:${tc}">${c.currentOvr}</div>
+        ${c.dup?'<div class="rv-d">♻️ DUPLICATE</div>':'<div class="rv-pr">💰'+c.price.toLocaleString()+'</div>'}`;
+      row.appendChild(div);requestAnimationFrame(()=>div.classList.add('shown'));
+      if(i===4)setTimeout(()=>buildPickUI(cards),480);
+    },d);d+=190;
+  });
+}
+
+function buildPickUI(cards){
+  const sec=document.getElementById('pick-sec');if(!sec)return;
+  sec.style.display='block';
+  const wrap=document.getElementById('pick-w');wrap.innerHTML='';
+  const nonDups=cards.filter(c=>!c.dup);
+  // If <=2 non-dups, auto-select them
+  if(nonDups.length<=2){
+    cards.forEach(c=>{if(c.dup)convDup(c.tier);});
+    nonDups.forEach(c=>window._picks.push(cards.indexOf(c)));
+    cards.forEach((c,i)=>{
+      const tc=tColor(c.tier,c.evt);const div=document.createElement('div');
+      div.className=`pk-sel ${cStyle(c.tier,c.evt)}${c.dup?' dup-p':' chosen'}`;
+      div.innerHTML=`<div style="font-size:1.5em">${c.icon}</div><div style="font-weight:800;font-size:.7em;margin:2px 0">${c.name}</div><div style="font-size:.6em">${c.pos}</div><div style="font-family:'Orbitron',sans-serif;font-size:.88em;color:${tc};font-weight:700">${c.currentOvr}</div>${c.dup?'<div style="font-size:.57em;color:#E74C3C">♻️ TOKEN</div>':''}`;
+      wrap.appendChild(div);
+    });
+    document.getElementById('conf-btn').style.display='inline-block';
+    return;
+  }
+  cards.forEach((c,i)=>{
+    const tc=tColor(c.tier,c.evt);const div=document.createElement('div');
+    if(c.dup){div.className=`pk-sel ${cStyle(c.tier,c.evt)} dup-p`;div.innerHTML=`<div style="font-size:1.5em">${c.icon}</div><div style="font-weight:800;font-size:.7em;margin:2px 0">${c.name}</div><div style="font-size:.6em">${c.pos}</div><div style="font-family:'Orbitron',sans-serif;font-size:.88em;color:${tc};font-weight:700">${c.currentOvr}</div><div style="font-size:.57em;color:#E74C3C">♻️ TOKEN</div>`;}
+    else{div.className=`pk-sel ${cStyle(c.tier,c.evt)}`;div.innerHTML=`<div style="font-size:1.5em">${c.icon}</div><div style="font-weight:800;font-size:.7em;margin:2px 0">${c.name}</div><div style="font-size:.6em">${c.pos}</div><div style="font-family:'Orbitron',sans-serif;font-size:.88em;color:${tc};font-weight:700">${c.currentOvr}</div><div style="font-size:.57em;color:#6ECB94">💰${c.price.toLocaleString()}</div>`;div.onclick=()=>togglePick(div,i);}
+    wrap.appendChild(div);
+  });
+}
+function togglePick(el,i){
+  if(el.classList.contains('chosen')){el.classList.remove('chosen');window._picks=window._picks.filter(x=>x!==i);document.querySelectorAll('.pk-sel.disabled').forEach(e=>e.classList.remove('disabled'));}
+  else{if(window._picks.length>=2){ntf('Max 2!','er');return;}el.classList.add('chosen');window._picks.push(i);if(window._picks.length===2){document.querySelectorAll('.pk-sel:not(.chosen):not(.dup-p)').forEach(e=>e.classList.add('disabled'));}}
+  const btn=document.getElementById('conf-btn');if(btn)btn.style.display=window._picks.length===2?'inline-block':'none';
+}
+function doPick(){
+  const picks=window._picks;if(picks.length<1)return;
+  const cards=window._pCards;
+  // Convert dups
+  cards.forEach(c=>{if(c.dup)convDup(c.tier);});
+  // Add picked cards
+  picks.forEach(i=>{const c=cards[i];if(c.dup)return;G.collection.push({name:c.name,pos:c.pos,country:c.country,flag:c.flag,club:c.club,icon:c.icon,baseOvr:c.baseOvr,currentOvr:c.currentOvr,tier:c.tier,evt:c.evt||null,price:c.price,addedAt:Date.now()});});
+  saveG();updateUI();closeM();
+  const kp=picks.filter(i=>!cards[i].dup).map(i=>cards[i].name);
+  ntf(kp.length?'✅ Kept: '+kp.join(' & '):'All dups converted!','ok');
+  if(document.getElementById('pg-cards').classList.contains('active'))renderCards();
+  if(document.getElementById('pg-squad').classList.contains('active'))renderSquad();
+}
+
+// ===========================================================
+// PACK SHOP RENDER
+// ===========================================================
+function renderPackShop(){
+  const cats={std:'std-pg',evt:'evt-pg',prm:'prm-pg'};
+  Object.entries(cats).forEach(([cat,elId])=>{
+    const el=document.getElementById(elId);
+    el.innerHTML=PACKS.filter(p=>p.cat===cat).map(pk=>{
+      const can=(G.tokens[pk.tok]||0)>=pk.cost;
+      const pool=PDB.filter(p=>p.b>=pk.poolRange[0]&&p.b<=pk.poolRange[1]);
+      const bigStar=pool.length?pool.reduce((a,b)=>b.b>a.b?b:a):null;
+      const pt=getPity(pk.id);
+      const pityPct=pk.pityElite>0?Math.min(100,((pt.eliteCount||0)/pk.pityElite)*100):0;
+      const r=pk.rateMap;
+      const rstr=[r.bronze>0?`🟫${(r.bronze*100).toFixed(0)}%`:'',r.silver>0?`⬜${(r.silver*100).toFixed(0)}%`:'',r.gold>0?`🟨${(r.gold*100).toFixed(0)}%`:'',r.special>0?`🟦${(r.special*100).toFixed(0)}%`:'',r.elite>0?'🟣1:1500':'',r.legend>0?'🔴1:2500':''].filter(Boolean).join(' ');
+      return `<div class="pkc ${pk.style} ${can?'':'locked'}" onclick="${can?`openPack('${pk.id}')`:``}">
+        <div class="pk-banner">
+          <div class="pk-icon">${pk.ic}</div>
+          <div class="pk-name">${pk.nm}</div>
+          <div class="pk-desc">${pk.desc}</div>
+          <div class="pk-cost">${pk.cost}x ${pk.tok.toUpperCase()}</div>
+          <div class="pk-rates">${rstr}</div>
+          ${!can?`<div style="font-size:.63em;margin-top:3px;opacity:.7">🔒 Have: ${G.tokens[pk.tok]||0}</div>`:''}
+        </div>
+        ${bigStar?`<div class="pk-bigstar">
+          <div class="pk-bs-icon">${bigStar.ic}</div>
+          <div class="pk-bs-info">
+            <div class="pk-bs-label">⭐ BIG STAR</div>
+            <div class="pk-bs-name">${bigStar.n}</div>
+            <div class="pk-bs-ovr" style="color:${tColor(getTier(bigStar.b),pk.evt)}">OVR ${bigStar.b}</div>
+          </div>
+        </div>`:''}
+        <div class="pk-pity">
+          <span>Pity: ${pt.eliteCount||0}/${pk.pityElite}</span>
+          <span>Legend: ${pt.legendCount||0}/${pk.pityLegend}</span>
+        </div>
+        <div class="pity-bar"><div class="pity-bf" style="width:${pityPct}%;background:${pityPct>80?'#FF9D9D':pityPct>50?'#C39BD3':'#5BA3D9'}"></div></div>
+        ${pk.evt?`<div style="font-size:.6em;padding:3px 12px 5px;opacity:.65;text-align:center">🎉 LIMITED EVENT</div>`:''}
+      </div>`;
+    }).join('');
+  });
+}
+
+// ===========================================================
+// SHOP
+// ===========================================================
+function renderShop(){
+  document.getElementById('sh-tkn').innerHTML=TOKSHOP.map(it=>`<div class="sh-i"><div class="sh-ic">${it.ic}</div><div class="sh-nm">${it.amt}x ${it.tok.toUpperCase()}</div><div class="sh-pr">💰 ${it.price.toLocaleString()}</div><button class="sh-btn" onclick="buyTok('${it.tok}',${it.amt},${it.price})">Buy</button></div>`).join('');
+  const el=document.getElementById('sell-area');
+  if(!G.collection.length){el.innerHTML='<p style="color:#7A4E1A;font-size:.82em">No players. Open packs first!</p>';return;}
+  const sorted=[...G.collection].map((p,i)=>({...p,ri:i})).sort((a,b)=>b.price-a.price);
+  el.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px">'+sorted.map(p=>{
+    const tc=tColor(p.tier,p.evt);
+    return `<div style="display:flex;align-items:center;gap:8px;background:var(--cr);border:1px solid var(--cr3);border-radius:9px;padding:8px">
+      <div class="pcard ${cStyle(p.tier,p.evt)}" style="width:50px;flex-shrink:0;cursor:default"><div style="font-size:1.4em;text-align:center;padding:3px">${p.icon}</div><div style="font-family:'Orbitron',sans-serif;font-size:.65em;text-align:center;padding:0 0 3px;color:${tc}">${p.currentOvr}</div></div>
+      <div style="flex:1;min-width:0"><div style="font-weight:800;font-size:.82em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.name}</div><div style="font-size:.68em;color:#7A4E1A">${p.pos} · ${p.country}</div><div style="font-size:.68em;color:#27AE60;font-weight:700">💰 ${p.price.toLocaleString()}</div></div>
+      <button class="btn btn-red btn-sm" onclick="sellP(${p.ri})">Sell</button>
+    </div>`;
+  }).join('')+'</div>';
+}
+function buyTok(type,amt,price){if(G.coins<price){ntf('❌ Need '+price.toLocaleString()+' coins!','er');return;}G.coins-=price;G.tokens[type]=(G.tokens[type]||0)+amt;saveG();updateUI();ntf('✅ Bought '+amt+'x '+type+'!','ok');renderShop();}
+function sellP(idx){const p=G.collection[idx];if(!p)return;if(G.squad.includes(idx)){ntf('Remove from squad first!','er');return;}G.coins+=p.price;G.collection.splice(idx,1);G.squad=G.squad.map(s=>s>idx?s-1:s).filter(s=>s<G.collection.length);saveG();updateUI();ntf('💰 Sold '+p.name+' for '+p.price.toLocaleString(),'ok');renderShop();if(document.getElementById('pg-cards').classList.contains('active'))renderCards();}
+
+// ===========================================================
+// SQUAD
+// ===========================================================
+function autoFill(){
+  const pos={GK:1,DEF:4,MID:3,FWD:3};const used=new Set();const sq=[];
+  ['GK','DEF','MID','FWD'].forEach(pp=>{const cnt=pos[pp];G.collection.map((c,i)=>({...c,ri:i})).filter(c=>!used.has(c.ri)&&c.pos===pp).sort((a,b)=>b.currentOvr-a.currentOvr).slice(0,cnt).forEach(c=>{used.add(c.ri);sq.push(c.ri);});});
+  G.collection.forEach((_,i)=>{if(!used.has(i)&&sq.length<25)sq.push(i);});
+  G.squad=sq;saveG();updateUI();renderSquad();ntf('⚡ Auto Best XI!','ok');
+}
+function clrSq(){G.squad=[];saveG();updateUI();renderSquad();}
+function addToSq(idx){if(G.squad.includes(idx)){ntf('Already in squad!','er');return;}if(G.squad.length>=25){ntf('Squad full!','er');return;}G.squad.push(idx);saveG();updateUI();renderSquad();ntf('✅ Added!','ok');}
+function rmFromSq(si){G.squad.splice(si,1);saveG();updateUI();renderSquad();}
+function renderSquad(){
+  const ovr=calcOvr();
+  document.getElementById('sq-top').innerHTML=`<div class="sq-card"><div class="sq-ovr">${ovr}<span>TEAM OVR / 1000</span></div><div class="sq-stats"><div class="sq-s"><div class="sv">${G.squad.length}</div><div class="sl">SQUAD</div></div><div class="sq-s"><div class="sv">${G.squad.filter(i=>G.collection[i]?.pos==='GK').length}</div><div class="sl">GK</div></div><div class="sq-s"><div class="sv">${G.squad.filter(i=>G.collection[i]?.pos==='DEF').length}</div><div class="sl">DEF</div></div><div class="sq-s"><div class="sv">${G.squad.filter(i=>G.collection[i]?.pos==='MID').length}</div><div class="sl">MID</div></div><div class="sq-s"><div class="sv">${G.squad.filter(i=>G.collection[i]?.pos==='FWD').length}</div><div class="sl">FWD</div></div><div class="sq-s"><div class="sv">${G.collection.length}</div><div class="sl">OWNED</div></div></div></div>`;
+  const top11=G.squad.slice(0,11);
+  const rows=[[top11[0]],[top11[1],top11[2],top11[3],top11[4]],[top11[5],top11[6],top11[7]],[top11[8],top11[9],top11[10]]];
+  document.getElementById('form-disp').innerHTML=`<div class="pitch">${rows.map(row=>`<div class="pitch-row">${row.map(idx=>{const p=idx!==undefined?G.collection[idx]:null;const si=idx!==undefined?G.squad.indexOf(idx):-1;const tc=p?tColor(p.tier,p.evt):'#FFD700';return p?`<div class="player-slot"><div class="slot-c filled" onclick="if(confirm('Remove?'))rmFromSq(${si})"><div class="s-ic">${p.icon}</div><div class="s-ov" style="color:${tc}">${p.currentOvr}</div><div class="s-nm">${p.name.split(' ').pop()}</div><div class="s-ps">${p.pos}</div></div></div>`:`<div class="player-slot"><div class="slot-c empty"><div style="font-size:.5em;color:rgba(255,255,255,.3);text-align:center">empty</div></div></div>`;}).join('')}</div>`).join('')}</div>`;
+  const bench=G.squad.slice(11).map((idx,si)=>{const p=G.collection[idx];const rsi=si+11;const tc=p?tColor(p.tier,p.evt):'#FFD700';return p?`<div class="bc"><button class="rm-b" onclick="event.stopPropagation();rmFromSq(${rsi})">✕</button><div class="bi">${p.icon}</div><div class="bo" style="color:${tc}">${p.currentOvr}</div><div class="bn">${p.name.split(' ').pop()}</div><div class="bp">${p.pos}</div></div>`:''});
+  document.getElementById('bench-disp').innerHTML=bench.join('')||'<div style="color:#7A4E1A;font-size:.78em;padding:6px">No bench.</div>';
+}
+
+// ===========================================================
+// CARDS COLLECTION
+// ===========================================================
+let cf='all';
+function filtColl(f,btn){cf=f;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderCards();}
+function renderCards(){
+  let pl=G.collection;
+  if(cf==='GK')pl=pl.filter(p=>p.pos==='GK');else if(cf==='DEF')pl=pl.filter(p=>p.pos==='DEF');else if(cf==='MID')pl=pl.filter(p=>p.pos==='MID');else if(cf==='FWD')pl=pl.filter(p=>p.pos==='FWD');else if(cf==='gold')pl=pl.filter(p=>['gold','special','elite','legend'].includes(p.tier));else if(cf==='elite')pl=pl.filter(p=>['elite','legend'].includes(p.tier));else if(cf==='event')pl=pl.filter(p=>p.evt);
+  pl=[...pl].sort((a,b)=>b.currentOvr-a.currentOvr);
+  const grid=document.getElementById('coll-grid');
+  if(!pl.length){grid.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:22px;color:#7A4E1A">No cards match. Open packs!</div>';return;}
+  grid.innerHTML=pl.map(p=>{const ri=G.collection.indexOf(p);const inSq=G.squad.includes(ri);const tc=tColor(p.tier,p.evt);return `<div class="pcard ${cStyle(p.tier,p.evt)}" onclick="showCardM(${ri})"><div class="pc-hdr"><div><div class="pc-ovr" style="color:${tc}">${p.currentOvr}</div><div class="pc-pos" style="color:${tc}">${p.pos}</div></div><div class="pc-flag">${p.flag}</div></div><div class="pc-body"><div class="pc-ic">${p.icon}</div><div class="pc-cl">${p.club}</div></div><div class="pc-nm">${p.name}</div><div class="pc-pr" style="color:#6ECB94">💰${p.price.toLocaleString()}</div>${inSq?'<div style="background:rgba(39,174,96,.3);color:#6ECB94;font-size:.57em;font-weight:800;text-align:center;padding:1px;letter-spacing:1px">IN SQUAD</div>':''}</div>`;}).join('');
+}
+function showCardM(idx){
+  const p=G.collection[idx];if(!p)return;const inSq=G.squad.includes(idx);const tc=tColor(p.tier,p.evt);
+  document.getElementById('mc').innerHTML=`<h2>${p.icon} ${p.name}</h2>
+    <div class="pcard ${cStyle(p.tier,p.evt)}" style="max-width:160px;margin:0 auto 13px;cursor:default"><div class="pc-hdr"><div><div class="pc-ovr" style="color:${tc};font-size:1.05em">${p.currentOvr}</div><div class="pc-pos" style="color:${tc}">${p.pos}</div></div><div class="pc-flag" style="font-size:1.05em">${p.flag}</div></div><div class="pc-body"><div class="pc-ic" style="font-size:3em">${p.icon}</div><div class="pc-cl">${p.club}</div></div><div class="pc-nm" style="font-size:.8em;padding:5px">${p.name}</div></div>
+    <div class="ibox" style="margin-bottom:11px"><div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;font-size:.78em"><div>🌍 <strong>${p.country}</strong></div><div>🏟️ <strong>${p.club}</strong></div><div>📍 <strong>${p.pos}</strong></div><div>⭐ <strong style="text-transform:capitalize">${p.tier}${p.evt?' ('+p.evt+')':''}</strong></div><div>Base: <strong>${p.baseOvr}</strong></div><div>OVR: <strong style="color:${tc}">${p.currentOvr}</strong></div><div>💰 <strong>${p.price.toLocaleString()}</strong></div></div></div>
+    <div style="display:flex;gap:6px;justify-content:center;flex-wrap:wrap"><button class="btn btn-d btn-sm" onclick="closeM()">← Back</button>${inSq?`<button class="btn btn-red btn-sm" onclick="rmFromSq(${G.squad.indexOf(idx)});closeM()">Remove Squad</button>`:`<button class="btn btn-g btn-sm" onclick="addToSq(${idx});closeM()">+ Squad</button>`}<button class="btn btn-red btn-sm" onclick="if(confirm('Sell for ${p.price.toLocaleString()}?')){sellP(${idx});closeM();}">💰 Sell</button></div>`;
+  document.getElementById('modal').style.display='flex';
+}
+
+// ===========================================================
+// UPGRADE
+// ===========================================================
+let selU=null;
+function renderUpgrade(){
+  document.getElementById('upg-tkns').innerHTML=Object.entries(G.upgradeTokens).map(([k,v])=>`<div class="utk"><div class="uc" style="color:${UPGCOL[k]}">${v}</div><div class="ul">${k.toUpperCase()}<br><span style="color:#7A4E1A">+${UPG[k]} OVR</span></div></div>`).join('');
+  const area=document.getElementById('upg-players');
+  if(!G.collection.length){area.innerHTML='<p style="color:#7A4E1A;text-align:center;padding:16px">Open packs first!</p>';return;}
+  area.innerHTML=`<div class="upg-pl">${[...G.collection].map((p,i)=>({...p,ri:i})).sort((a,b)=>b.currentOvr-a.currentOvr).map(p=>`<div class="upc ${selU===p.ri?'sel':''}" onclick="selUpg(${p.ri})"><div style="font-size:1.6em">${p.icon}</div><div style="font-weight:800;font-size:.8em">${p.name}</div><div style="font-size:.68em;color:#7A4E1A">${p.pos} · ${p.country}</div><div style="font-family:'Orbitron',sans-serif;font-size:.95em;color:${tColor(p.tier,p.evt)};font-weight:700">${p.currentOvr}</div></div>`).join('')}</div>`;
+}
+function selUpg(idx){selU=idx;renderUpgrade();renderUpgA();}
+function renderUpgA(){
+  const area=document.getElementById('upg-actions');if(selU===null){area.style.display='none';return;}
+  const p=G.collection[selU];area.style.display='block';
+  area.innerHTML=`<div style="background:var(--cr2);border-radius:11px;padding:14px;max-width:340px;margin:0 auto"><div style="font-size:1.7em">${p.icon}</div><div style="font-weight:800;margin:3px 0">${p.name}</div><div style="font-family:'Orbitron',sans-serif;font-size:1.6em;color:${tColor(p.tier,p.evt)};font-weight:700">${p.currentOvr}</div><div style="font-size:.7em;color:#7A4E1A;margin-bottom:8px">Max player OVR: 120</div><hr class="sep" style="margin:7px 0"><div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center">${Object.entries(G.upgradeTokens).filter(([k,v])=>v>0).map(([k,v])=>`<button class="btn btn-d btn-sm" style="border:1px solid ${UPGCOL[k]};color:${UPGCOL[k]}" onclick="doUpg(${selU},'${k}')">${k.toUpperCase()} (+${UPG[k]}) [${v}]</button>`).join('')||'<div style="color:#7A4E1A;font-size:.78em">No tokens. Get from packs!</div>'}</div></div>`;
+}
+function doUpg(idx,type){if(!G.upgradeTokens[type]){ntf('No tokens!','er');return;}G.upgradeTokens[type]--;G.collection[idx].currentOvr=Math.min(120,G.collection[idx].currentOvr+UPG[type]);G.collection[idx].tier=getTier(G.collection[idx].currentOvr);G.collection[idx].price=pPrice(G.collection[idx].currentOvr);saveG();updateUI();ntf(`⬆️ ${G.collection[idx].name} → OVR ${G.collection[idx].currentOvr}! (+${UPG[type]})`,'sp');renderUpgrade();renderUpgA();}
+
+// ===========================================================
+// MILESTONES
+// ===========================================================
+function renderMilestones(){
+  const ovr=calcOvr();
+  document.getElementById('ms-list').innerHTML=MILESTONES.map(ms=>{const done=G.claimedMilestones.includes(ms.ovr);const rw=Object.entries(ms.rw).map(([k,v])=>'+'+v+' '+k).join(', ');return `<div class="ms-c ${done?'done':''}"><div class="ms-ov" style="color:${done?'#27AE60':ovr>=ms.ovr?'#E8B84B':'#7A4E1A'}">${ms.ovr}</div><div class="ms-i"><div class="ms-t">${ms.lbl}</div><div class="ms-s">${rw}${done?' ✅':''}</div></div><div style="font-size:1.3em">${done?'🏆':ovr>=ms.ovr?'✨':'🔒'}</div></div>`;}).join('');
+}
+
+// NAVIGATION & MODAL
+function showPg(name){
+  document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pg-'+name).classList.add('active');
+  document.querySelector(`.nb[onclick="showPg('${name}')"]`).classList.add('active');
+  if(name==='packs')renderPackShop();if(name==='shop')renderShop();if(name==='squad')renderSquad();if(name==='cards')renderCards();if(name==='upgrade'){selU=null;renderUpgrade();document.getElementById('upg-actions').style.display='none';}if(name==='goals')renderMilestones();
+}
+function closeM(){document.getElementById('modal').style.display='none';}
+document.getElementById('modal').addEventListener('click',function(e){if(e.target===this)closeM();});
+
+// NOTIF
+function ntf(msg,type=''){const el=document.createElement('div');el.className=`nt ${type}`;el.textContent=msg;document.getElementById('ntf').appendChild(el);setTimeout(()=>el.style.opacity='0',3500);setTimeout(()=>el.remove(),4000);}
+
+// INIT
+updateUI();renderPackShop();
+if(!G.stats.packs)setTimeout(()=>ntf('👋 Welcome! You have 10 Normal tokens. Open packs to start!','ok'),500);
+</script>
+</body>
+</html>
